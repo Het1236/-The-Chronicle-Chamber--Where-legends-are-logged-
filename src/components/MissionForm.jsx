@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AvengerContext } from '../context/AvengerContext';
 
-export default function MissionForm({ onSubmit, selectedAvenger }) {
+export default function MissionForm() {
+  const { selectedAvenger, addMission } = useContext(AvengerContext);
   const [formData, setFormData] = useState({
     title: '',
     location: '',
@@ -12,17 +14,15 @@ export default function MissionForm({ onSubmit, selectedAvenger }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
     const mission = {
       ...formData,
       id: Date.now(),
       hero: selectedAvenger.name,
+      heroId: selectedAvenger.id,
+      heroImage: selectedAvenger.image,
       timestamp: new Date().toISOString()
     };
-    
-    onSubmit(mission);
-    
-    // Reset form
+    addMission(mission);
     setFormData({
       title: '',
       location: '',

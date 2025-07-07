@@ -1,176 +1,138 @@
 import React, { useState } from 'react';
 
 export default function MissionFilters({ onFilterChange, totalMissions, filteredCount }) {
-  const [filters, setFilters] = useState({
-    date: '',
-    location: '',
-    keyword: '',
-    difficulty: 'All'
-  });
+  const [filter, setFilter] = useState("All");
+const [showForm, setShowForm] = useState(false);
+const [selectedDate, setSelectedDate] = useState("");
+const [filterLocation, setFilterLocation] = useState("");
+const [searchKeyword, setSearchKeyword] = useState("");
+const [filterWeek, setFilterWeek] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
 
-  const handleFilterChange = (key, value) => {
-    const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
-  };
+  let heroMissions = missions.filter((m) => m.heroId === selectedAvenger.id);
 
-  const clearFilters = () => {
-    const clearedFilters = {
-      date: '',
-      location: '',
-      keyword: '',
-      difficulty: 'All'
-    };
-    setFilters(clearedFilters);
-    onFilterChange(clearedFilters);
-  };
-
-  const hasActiveFilters = filters.date || filters.location || filters.keyword || filters.difficulty !== 'All';
+if (filter !== "All") heroMissions = heroMissions.filter((m) => m.priority === filter);
+if (selectedDate) heroMissions = heroMissions.filter((m) => m.date === selectedDate);
+if (filterLocation) heroMissions = heroMissions.filter((m) => m.location.toLowerCase().includes(filterLocation.toLowerCase()));
+if (searchKeyword) heroMissions = heroMissions.filter((m) =>
+  m.title.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+  m.description.toLowerCase().includes(searchKeyword.toLowerCase())
+);
+if (filterWeek) {
+  heroMissions = heroMissions.filter((m) => {
+    const d = new Date(m.date);
+    return d >= filterWeek[0] && d <= filterWeek[1];
+  });
+}
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700">
-      {/* Filter Header */}
-      <div className="p-6 border-b border-slate-700">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-red-600/20 rounded-lg flex items-center justify-center">
-              <i className="ri-filter-line text-red-400"></i>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white">Mission Filters</h3>
-              <p className="text-sm text-gray-400">
-                Showing {filteredCount} of {totalMissions} missions
-                {hasActiveFilters && (
-                  <span className="ml-2 px-2 py-1 bg-red-600/20 text-red-400 rounded text-xs">
-                    Filtered
-                  </span>
-                )}
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="text-sm text-gray-400 hover:text-white px-3 py-1 hover:bg-slate-700 rounded cursor-pointer whitespace-nowrap"
-              >
-                Clear All
-              </button>
-            )}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-slate-700 rounded cursor-pointer"
-            >
-              <i className={`ri-arrow-${showFilters ? 'up' : 'down'}-s-line`}></i>
-            </button>
-          </div>
-        </div>
+ // ...inside your main content column (lg:col-span-3 space-y-8)...
+<div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700">
+  <div className="p-6 border-b border-slate-700">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-8 h-8 bg-red-600/20 rounded-lg flex items-center justify-center">
+        <i className="ri-filter-line text-red-400"></i>
       </div>
-
-      {/* Filter Controls */}
-      {showFilters && (
-        <div className="p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            
-            {/* Date Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Filter by Date
-              </label>
-              <input
-                type="date"
-                value={filters.date}
-                onChange={(e) => handleFilterChange('date', e.target.value)}
-                className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-red-500 text-sm"
-              />
-            </div>
-
-            {/* Location Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Filter by Location
-              </label>
-              <input
-                type="text"
-                value={filters.location}
-                onChange={(e) => handleFilterChange('location', e.target.value)}
-                placeholder="e.g. New York"
-                className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-500 text-sm"
-              />
-            </div>
-
-            {/* Keyword Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Search Keywords
-              </label>
-              <input
-                type="text"
-                value={filters.keyword}
-                onChange={(e) => handleFilterChange('keyword', e.target.value)}
-                placeholder="Search missions..."
-                className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-500 text-sm"
-              />
-            </div>
-
-            {/* Difficulty Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Difficulty Level
-              </label>
-              <select
-                value={filters.difficulty}
-                onChange={(e) => handleFilterChange('difficulty', e.target.value)}
-                className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-red-500 text-sm pr-8"
-              >
-                <option value="All">All Difficulties</option>
-                <option value="Easy">Easy</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Expert">Expert</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Quick Filter Buttons */}
-          <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-700">
-            <span className="text-sm text-gray-400 mr-3">Quick filters:</span>
-            
-            <button
-              onClick={() => handleFilterChange('date', new Date().toISOString().split('T')[0])}
-              className="px-3 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-white rounded-full cursor-pointer whitespace-nowrap"
-            >
-              Today
-            </button>
-            
-            <button
-              onClick={() => handleFilterChange('difficulty', 'Expert')}
-              className="px-3 py-1 text-xs bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-full cursor-pointer whitespace-nowrap"
-            >
-              Expert Only
-            </button>
-            
-            <button
-              onClick={() => handleFilterChange('difficulty', 'Easy')}
-              className="px-3 py-1 text-xs bg-green-600/20 hover:bg-green-600/30 text-green-400 rounded-full cursor-pointer whitespace-nowrap"
-            >
-              Easy Only
-            </button>
-            
-            <button
-              onClick={() => {
-                const thisWeek = new Date();
-                thisWeek.setDate(thisWeek.getDate() - 7);
-                handleFilterChange('date', thisWeek.toISOString().split('T')[0]);
-              }}
-              className="px-3 py-1 text-xs bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-full cursor-pointer whitespace-nowrap"
-            >
-              This Week
-            </button>
-          </div>
-        </div>
-      )}
+      <div>
+        <h3 className="text-lg font-bold text-white">Mission Filters</h3>
+        <p className="text-sm text-gray-400">
+          Showing {heroMissions.length} of {missions.filter(m => m.heroId === selectedAvenger.id).length} missions
+        </p>
+      </div>
     </div>
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+      <div>
+        <label className="block text-gray-300 text-sm mb-1">Filter by Date</label>
+        <input
+          type="date"
+          className="w-full px-4 py-2 rounded bg-slate-700 text-white"
+          value={selectedDate}
+          onChange={e => setSelectedDate(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-gray-300 text-sm mb-1">Filter by Location</label>
+        <input
+          type="text"
+          className="w-full px-4 py-2 rounded bg-slate-700 text-white"
+          placeholder="e.g. New York"
+          value={filterLocation}
+          onChange={e => setFilterLocation(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-gray-300 text-sm mb-1">Search Keywords</label>
+        <input
+          type="text"
+          className="w-full px-4 py-2 rounded bg-slate-700 text-white"
+          placeholder="Search missions..."
+          value={searchKeyword}
+          onChange={e => setSearchKeyword(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-gray-300 text-sm mb-1">Difficulty Level</label>
+        <select
+          className="w-full px-4 py-2 rounded bg-slate-700 text-white"
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+        >
+          <option value="All">All Difficulties</option>
+          <option value="Low">Easy Only</option>
+          <option value="Medium">Advanced Only</option>
+          <option value="High">Expert Only</option>
+        </select>
+      </div>
+    </div>
+    <div className="flex gap-2 mt-2">
+      <button
+        className="px-3 py-1 rounded bg-blue-700 text-white text-xs"
+        onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+      >
+        Today
+      </button>
+      <button
+        className="px-3 py-1 rounded bg-red-700 text-white text-xs"
+        onClick={() => setFilter('High')}
+      >
+        Expert Only
+      </button>
+      <button
+        className="px-3 py-1 rounded bg-green-700 text-white text-xs"
+        onClick={() => setFilter('Low')}
+      >
+        Easy Only
+      </button>
+      <button
+        className="px-3 py-1 rounded bg-blue-500 text-white text-xs"
+        onClick={() => {
+          // This Week: filter missions for this week
+          const today = new Date();
+          const weekStart = new Date(today);
+          weekStart.setDate(today.getDate() - today.getDay());
+          const weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekStart.getDate() + 6);
+          setSelectedDate('');
+          setFilter('All');
+          setFilterWeek([weekStart, weekEnd]);
+        }}
+      >
+        This Week
+      </button>
+      <button
+        className="px-3 py-1 rounded bg-gray-700 text-white text-xs"
+        onClick={() => {
+          setSelectedDate('');
+          setFilter('All');
+          setFilterLocation('');
+          setSearchKeyword('');
+          setFilterWeek(null);
+        }}
+      >
+        Clear
+      </button>
+    </div>
+  </div>
+</div>
   );
 }

@@ -1,9 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import avengerImg from '../assets/Avengers.jpg'
+import { useContext } from 'react';
+import { AvengerContext } from '../context/AvengerContext';
+import spidermanImg from '../assets/Spidy3.jpeg';
+import spidermanImg2 from '../assets/Spidy4.jpg';
+import spidermanImg3 from '../assets/Spidy2.jpg';
+import thorImg from '../assets/Thor3.jpg';
+import thorImg2 from '../assets/Thor4.jpg';
+import thorImg3 from '../assets/Thor2.jpg';
+import drStrangeImg from '../assets/DrStrange2.jpg';
+import drStrangeImg2 from '../assets/DrStrange4.jpg';
+import drStrangeImg3 from '../assets/DrStrange3.jpg';
+import wandImg from '../assets/Wanda3.jpg';
+import wandImg2 from '../assets/Wanda4.jpg';
+import wandImg3 from '../assets/Wanda2.jpg';
+import ironManImg3 from '../assets/IronMan3.jpg';
+import ironManImg2 from '../assets/IronMan6.jpg';
+import ironManImg from '../assets/IronMan2.jpg';
+
 
 export default function HeroSelection() {
     const navigate = useNavigate()
+    const { selectAvenger } = useContext(AvengerContext);
+
   const [hoveredHero, setHoveredHero] = useState(null);
   const [selectedHero, setSelectedHero] = useState(null);
 
@@ -12,7 +32,9 @@ export default function HeroSelection() {
       id: 'spiderman',
       name: 'Spider-Man',
       alias: 'Peter Parker',
-      image: 'https://readdy.ai/api/search-image?query=Spider-Man%20in%20iconic%20red%20and%20blue%20suit%2C%20dynamic%20pose%2C%20ultra%20high%20definition%2C%20photorealistic%2C%20dramatic%20lighting%2C%20detailed%20texture%20of%20suit%2C%20web%20pattern%20visible%2C%20muscular%20athletic%20build%2C%20against%20New%20York%20City%20backdrop%2C%20cinematic%20quality&width=400&height=400&seq=10&orientation=squarish',
+      image1: `${spidermanImg}`,
+      image2: `${spidermanImg2}`,
+      image3: `${spidermanImg3}`,
       quote: "With great power comes great responsibility.",
       basicInfo: {
         realName: 'Peter Parker',
@@ -31,7 +53,9 @@ export default function HeroSelection() {
       id: 'ironman',
       name: 'Iron Man',
       alias: 'Tony Stark',
-      image: 'https://readdy.ai/api/search-image?query=Iron%20Man%20in%20sleek%20red%20and%20gold%20armor%2C%20ultra%20high%20definition%2C%20photorealistic%2C%20dramatic%20lighting%2C%20arc%20reactor%20glowing%20in%20center%2C%20detailed%20metal%20texture%2C%20heroic%20pose%2C%20technological%20background%2C%20cinematic%20quality%2C%20Mark%2085%20suit&width=400&height=400&seq=11&orientation=squarish',
+      image1: `${ironManImg}`,
+      image2: `${ironManImg2}`,
+      image3: `${ironManImg3}`,
       quote: "I am Iron Man.",
       basicInfo: {
         realName: 'Tony Stark',
@@ -50,7 +74,9 @@ export default function HeroSelection() {
       id: 'thor',
       name: 'Thor',
       alias: 'God of Thunder',
-      image: 'https://readdy.ai/api/search-image?query=Thor%20with%20Stormbreaker%20axe%2C%20long%20blonde%20hair%2C%20red%20cape%20flowing%2C%20ultra%20high%20definition%2C%20photorealistic%2C%20dramatic%20lighting%2C%20Norse%20armor%20details%2C%20electricity%20crackling%20around%20him%2C%20muscular%20build%2C%20cosmic%20background%2C%20cinematic%20quality&width=400&height=400&seq=12&orientation=squarish',
+      image1: `${thorImg}`,
+      image2: `${thorImg2}`,
+      image3: `${thorImg3}`,
       quote: "I am Thor, God of Thunder!",
       basicInfo: {
         realName: 'Thor Odinson',
@@ -69,7 +95,9 @@ export default function HeroSelection() {
       id: 'doctorstrange',
       name: 'Doctor Strange',
       alias: 'Stephen Strange',
-      image: 'https://readdy.ai/api/search-image?query=Doctor%20Strange%20with%20Cloak%20of%20Levitation%2C%20mystical%20hand%20gestures%20with%20orange%20energy%2C%20ultra%20high%20definition%2C%20photorealistic%2C%20dramatic%20lighting%2C%20detailed%20Eye%20of%20Agamotto%20amulet%2C%20facial%20hair%20perfectly%20groomed%2C%20magical%20symbols%20floating%20around%2C%20cosmic%20background%2C%20cinematic%20quality&width=400&height=400&seq=13&orientation=squarish',
+      image1: `${drStrangeImg}`,
+      image2: `${drStrangeImg2}`,
+      image3: `${drStrangeImg3}`,
       quote: "The bill comes due. Always.",
       basicInfo: {
         realName: 'Stephen Strange',
@@ -88,7 +116,9 @@ export default function HeroSelection() {
       id: 'scarletwitch',
       name: 'Scarlet Witch',
       alias: 'Wanda Maximoff',
-      image: 'https://readdy.ai/api/search-image?query=Scarlet%20Witch%20with%20red%20energy%20powers%20emanating%20from%20hands%2C%20flowing%20red%20outfit%20with%20headpiece%2C%20ultra%20high%20definition%2C%20photorealistic%2C%20dramatic%20lighting%2C%20intense%20facial%20expression%2C%20detailed%20costume%20texture%2C%20mystical%20background%20with%20red%20energy%20effects%2C%20cinematic%20quality&width=400&height=400&seq=14&orientation=squarish',
+      image1: `${wandImg}`,
+      image2: `${wandImg2}`,
+      image3: `${wandImg3}`,
       quote: "You took everything from me.",
       basicInfo: {
         realName: 'Wanda Maximoff',
@@ -105,19 +135,16 @@ export default function HeroSelection() {
     }
   ];
 
-const handleHeroSelect = (hero) => {
-  setSelectedHero(hero);
-  localStorage.setItem('selectedAvenger', JSON.stringify(hero));
-  // In your actual implementation, you would navigate to home page
-  // For now, we'll just show a selection confirmation
-   navigate('/', { state: { selectedHero: hero } });
-  alert(`Selected ${hero.name}! In your app, this would navigate to the home page.`);
-};
-
-  const handleNavigation = (page) => {
-    // In your actual implementation, you would use React Router navigation
-    alert(`Navigating to ${page}. In your app, this would use React Router.`);
+  const handleHeroSelect = (hero) => {
+    selectAvenger(hero);
+    navigate('/');
   };
+
+const handleNavigation = (page) => {
+  if (page === 'Choose Hero') navigate('/heroes');
+  else if (page === 'Home') navigate('/');
+  else if (page === 'Mission Log') navigate('/missions');
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900">
@@ -196,7 +223,7 @@ const handleHeroSelect = (hero) => {
                   <div className="w-48 h-48 mx-auto mb-4 relative">
                     <div 
                       className="w-full h-full rounded-full bg-cover bg-center bg-no-repeat border-4 border-slate-600 group-hover:border-red-500 transition-all duration-300 shadow-2xl"
-                      style={{ backgroundImage: `url('${hero.image}')` }}
+                      style={{ backgroundImage: `url('${hero.image1}')` }}
                     >
                       <div className={`absolute inset-0 rounded-full bg-gradient-to-t from-black/80 via-transparent to-transparent transition-opacity duration-300 ${
                         hoveredHero === hero.id ? 'opacity-100' : 'opacity-0'

@@ -1,23 +1,31 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AvengerContext } from './context/AvengerContext';
 import HeroSelection from './pages/HeroSelection';
+import Home from './pages/Home';
+import Missions from './pages/Missions';
 
+function PrivateRoute({ children }) {
+  const { selectedAvenger } = useContext(AvengerContext);
+  return selectedAvenger ? children : <Navigate to="/heroes" />;
+}
 
-function App() {
+export default function App() {
   return (
-    //  <div className="bg-blue-500 text-white p-4 rounded-lg">
-    //   <h1 className="text-2xl font-bold">Tailwind Test</h1>
-    //   <p className="mt-2">If you can see blue background, Tailwind is working!</p>
-    // </div>
     <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/heroes" element={<HeroSelection />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/heroes" element={<HeroSelection />} />
+        <Route path="/" element={
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        } />
+        <Route path="/missions" element={
+          <PrivateRoute>
+            <Missions />
+          </PrivateRoute>
+        } />
+      </Routes>
     </Router>
   );
 }
-
-export default App;
