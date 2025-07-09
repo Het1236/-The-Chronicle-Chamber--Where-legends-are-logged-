@@ -1,15 +1,15 @@
-import React, { useState, useContext } from 'react';
-import { AvengerContext } from '../context/AvengerContext';
+import React, { useState, useContext } from "react";
+import { AvengerContext } from "../context/AvengerContext";
 
 export default function MissionForm() {
   const { selectedAvenger, addMission } = useContext(AvengerContext);
   const [formData, setFormData] = useState({
-    title: '',
-    location: '',
-    date: '',
-    priority: 'Medium',
-    description: '',
-    threat: 'Low'
+    title: "",
+    location: "",
+    date: "",
+    priority: "Medium",
+    description: "",
+    threat: "Low",
   });
 
   const handleSubmit = (e) => {
@@ -20,40 +20,55 @@ export default function MissionForm() {
       hero: selectedAvenger.name,
       heroId: selectedAvenger.id,
       heroImage: selectedAvenger.image,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
     addMission(mission);
     setFormData({
-      title: '',
-      location: '',
-      date: '',
-      priority: 'Medium',
-      description: '',
-      threat: 'Low'
+      title: "",
+      location: "",
+      date: "",
+      priority: "Medium",
+      description: "",
+      threat: "Low",
     });
   };
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   return (
     <div className="max-w-4xl mx-auto px-8">
       <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-8">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-white mb-4">Log New Mission</h2>
-          <p className="text-gray-300">Record your heroic activities and track your progress</p>
+        <div className="flex items-center gap-3 mb-8">
+          <div
+            className="w-14 h-14 bg-cover bg-center bg-no-repeat rounded-full border-2 border-red-500"
+            style={{
+              backgroundImage: `url(${selectedAvenger.image1})`
+            }}
+          ></div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">Log New Mission </h2>
+            <p className="text-gray-400">
+              Logging as <span className="text-red-500">{selectedAvenger.name}</span> ({selectedAvenger.basicInfo.realName})
+            </p>
+          <p className="text-gray-300">
+            Record your heroic activities and track your progress
+          </p>
+          </div>
         </div>
+
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
             {/* Mission Title */}
             <div>
-              <label className="block text-white font-medium mb-2">Mission Title</label>
+              <label className="block text-white font-medium mb-2">
+                Mission Title
+              </label>
               <input
                 type="text"
                 name="title"
@@ -67,7 +82,9 @@ export default function MissionForm() {
 
             {/* Location */}
             <div>
-              <label className="block text-white font-medium mb-2">Location</label>
+              <label className="block text-white font-medium mb-2">
+                Location
+              </label>
               <input
                 type="text"
                 name="location"
@@ -94,7 +111,9 @@ export default function MissionForm() {
 
             {/* Priority */}
             <div>
-              <label className="block text-white font-medium mb-2">Priority Level</label>
+              <label className="block text-white font-medium mb-2">
+                Priority Level
+              </label>
               <div className="relative">
                 <select
                   name="priority"
@@ -112,7 +131,9 @@ export default function MissionForm() {
 
             {/* Threat Level */}
             <div>
-              <label className="block text-white font-medium mb-2">Threat Level</label>
+              <label className="block text-white font-medium mb-2">
+                Threat Level
+              </label>
               <div className="relative">
                 <select
                   name="threat"
@@ -128,12 +149,13 @@ export default function MissionForm() {
                 <i className="ri-arrow-down-s-line absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
               </div>
             </div>
-
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-white font-medium mb-2">Mission Description</label>
+            <label className="block text-white font-medium mb-2">
+              Mission Description
+            </label>
             <textarea
               name="description"
               value={formData.description}
@@ -144,7 +166,9 @@ export default function MissionForm() {
               placeholder="Describe the mission details, objectives, and outcomes..."
             />
             <div className="text-right mt-1">
-              <span className="text-xs text-gray-400">{formData.description.length}/500</span>
+              <span className="text-xs text-gray-400">
+                {formData.description.length}/500
+              </span>
             </div>
           </div>
 

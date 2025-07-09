@@ -14,7 +14,8 @@ export default function MissionCard({ mission, heroImage }) {
             <div
               className="w-full h-full bg-cover bg-center bg-no-repeat relative"
               style={{
-                backgroundImage: `url(${selectedAvenger.image3})`,
+                backgroundImage: selectedAvenger?.image3 ? `url(${selectedAvenger.image3})` : 'none',
+                backgroundColor: 'rgb(30, 41, 59)'
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
@@ -52,7 +53,8 @@ export default function MissionCard({ mission, heroImage }) {
               <div
                 className="absolute inset-0 opacity-20 bg-cover bg-center bg-no-repeat"
                 style={{
-                  backgroundImage: `url(${selectedAvenger.image})`,
+                  backgroundImage: selectedAvenger?.image1 ? `url(${selectedAvenger.image1})` : 'none',
+                  backgroundColor: 'rgb(30, 41, 59)'
                 }}
               ></div>
               
