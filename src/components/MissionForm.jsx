@@ -42,7 +42,7 @@ export default function MissionForm() {
         ...formData,
         hero: selectedAvenger.name,
         heroId: selectedAvenger.id,
-        heroImage: selectedAvenger.image,
+        heroImage: selectedAvenger.image3,
       });
     } else {
       addMission({
@@ -50,7 +50,7 @@ export default function MissionForm() {
         id: Date.now(),
         hero: selectedAvenger.name,
         heroId: selectedAvenger.id,
-        heroImage: selectedAvenger.image,
+        heroImage: selectedAvenger.image3,
         timestamp: new Date().toISOString(),
       });
     }

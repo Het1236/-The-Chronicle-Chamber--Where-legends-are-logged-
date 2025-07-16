@@ -2,13 +2,19 @@ import { useContext } from "react";
 import { AvengerContext } from "../context/AvengerContext";
 
 export default function MissionCard({ mission }) {
-  const { selectedAvenger, setEditingMission } = useContext(AvengerContext);
+  const { selectedAvenger, setEditingMission, deleteMission } = useContext(AvengerContext);
 
   const handleEdit = () => {
     setEditingMission(mission);
     const form = document.getElementById("mission-form");
     if (form) {
       form.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+  
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this mission?")) {
+      deleteMission(mission.id);
     }
   };
 
@@ -105,8 +111,21 @@ export default function MissionCard({ mission }) {
                     Threat: {mission.threat}
                   </span>
                 </div>
-                {/* Edit Button at Bottom Right */}
-                <div className="absolute bottom-4 right-4">
+                {/* Action Buttons at Bottom Right */}
+                <div className="absolute bottom-4 right-4 flex gap-2">
+                  <button
+                    onClick={handleDelete}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-white bg-red-500/30 backdrop-blur-md border border-red-500/30 shadow-xl hover:bg-red-500/50 transition-all animate__animated animate__fadeIn"
+                    title="Delete Mission"
+                    style={{
+                      minWidth: 90,
+                      boxShadow: "0 4px 24px 0 rgba(255,80,80,0.15)",
+                      border: "1.5px solid rgba(255,80,80,0.25)",
+                    }}
+                  >
+                    <i className="ri-delete-bin-line text-lg"></i>
+                    <span>Delete</span>
+                  </button>
                   <button
                     onClick={handleEdit}
                     className="flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-white bg-white/20 backdrop-blur-md border border-white/30 shadow-xl hover:bg-white/30 transition-all animate__animated animate__fadeIn"

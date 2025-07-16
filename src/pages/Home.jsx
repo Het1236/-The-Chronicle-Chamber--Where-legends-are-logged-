@@ -11,13 +11,27 @@ import ParticleBackground from "../components/ParticleBackground";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { selectedAvenger, missions } = useContext(AvengerContext);
+  const { selectedAvenger, missions, loading } = useContext(AvengerContext);
   // Animation hooks
   const [heroProfileRef, heroProfileProps] = useScaleIn(200);
   const [welcomeTextRef, welcomeTextProps] = useSlideIn('right', 400);
   const [formRef, formProps] = useFadeIn(600);
   const [mapRef, mapProps] = useFadeIn(800);
   const [statsRef, statsProps] = useScaleIn(1000);
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-blue-900 to-slate-800 relative overflow-hidden flex items-center justify-center">
+        <ParticleBackground />
+        <Navbar />
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white text-xl">Loading Mission Data...</p>
+        </div>
+      </div>
+    );
+  }
+  
   if (!selectedAvenger) return null;
   const heroMissions = missions.filter((m) => m.heroId === selectedAvenger.id);
 
@@ -82,7 +96,7 @@ export default function Home() {
         className="max-w-7xl mx-auto px-8 py-8"
       >
         <MissionForm />
-           <div class="text-center mb-12 my-5"><h2 class="text-3xl font-bold text-white mb-4">Mission History</h2><p class="text-gray-300">Your completed missions as {selectedAvenger.name}</p></div>
+           <div className="text-center mb-12 my-5"><h2 className="text-3xl font-bold text-white mb-4">Mission History</h2><p class="text-gray-300">Your completed missions as {selectedAvenger.name}</p></div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
           {heroMissions.map((mission, index) => (
             <animated.div

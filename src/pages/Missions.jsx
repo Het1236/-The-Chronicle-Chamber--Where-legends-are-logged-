@@ -10,7 +10,7 @@ import { useFadeIn, useScaleIn, useSlideIn } from '../utils/animations';
 import ParticleBackground from '../components/ParticleBackground';
 
 export default function Missions() {
-  const { selectedAvenger, missions } = useContext(AvengerContext);
+  const { selectedAvenger, missions, loading } = useContext(AvengerContext);
   const [filter, setFilter] = useState("All");
   const [showForm, setShowForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
@@ -25,6 +25,19 @@ export default function Missions() {
   const [filtersRef, filtersProps] = useSlideIn('right', 600);
   const [missionGridRef, missionGridProps] = useScaleIn(800);
   const [mapRef, mapProps] = useFadeIn(1000);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-blue-900 to-slate-800 relative overflow-hidden flex items-center justify-center">
+        <ParticleBackground />
+        <Navbar />
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white text-xl">Loading Mission Data...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!selectedAvenger) return null;
   let heroMissions = missions.filter((m) => m.heroId === selectedAvenger.id);

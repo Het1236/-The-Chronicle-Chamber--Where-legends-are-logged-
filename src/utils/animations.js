@@ -1,5 +1,6 @@
 import { useInView } from 'react-intersection-observer';
 import { useSpring } from '@react-spring/web';
+import { useState, useEffect, useRef } from 'react';
 
 // Fade in animation for elements
 export const useFadeIn = (delay = 0) => {
@@ -75,4 +76,78 @@ export const useBounce = (delay = 0) => {
   });
 
   return [ref, props];
+};
+
+/**
+ * Hook to create a pulse animation
+ * @param {number} duration - Duration of animation in milliseconds
+ * @param {number} scale - Maximum scale value during pulse
+ * @returns {Object} - Animation properties
+ */
+export const usePulse = (duration = 1500, scale = 1.05) => {
+  return useSpring({
+    from: { transform: 'scale(1)' },
+    to: [{ transform: `scale(${scale})` }, { transform: 'scale(1)' }],
+    config: { duration: duration / 2 },
+    loop: true,
+  });
+};
+
+/**
+ * Hook to create a floating animation
+ * @param {number} duration - Duration of animation in milliseconds
+ * @param {number} y - Distance to float in pixels
+ * @returns {Object} - Animation properties
+ */
+export const useFloat = (duration = 2000, y = 10) => {
+  return useSpring({
+    from: { transform: 'translateY(0px)' },
+    to: [{ transform: `translateY(-${y}px)` }, { transform: 'translateY(0px)' }],
+    config: { duration: duration / 2 },
+    loop: true,
+  });
+};
+
+/**
+ * Hook to create a typing animation for text
+ * @param {string} text - Text to animate
+ * @param {number} delay - Delay in milliseconds before animation starts
+ * @param {number} speed - Speed of typing (characters per second)
+ * @returns {Object} - { typedText, isComplete }
+ */
+export const useTypingEffect = (text, delay = 0, speed = 50) => {
+  const [typedText, setTypedText] = useState('');
+  const [isComplete, setIsComplete] = useState(false);
+  const index = useRef(0);
+
+  useEffect(() => {
+    let timeout;
+
+    // Reset when text changes
+    index.current = 0;
+    setTypedText('');
+    setIsComplete(false);
+
+    const startTyping = () => {
+      if (index.current < text.length) {
+        const timeout = setTimeout(() => {
+          setTypedText(prev => prev + text.charAt(index.current));
+          index.current += 1;
+          startTyping();
+        }, 1000 / speed);
+        return timeout;
+      } else {
+        setIsComplete(true);
+        return null;
+      }
+    };
+
+    timeout = setTimeout(startTyping, delay);
+
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [text, delay, speed]);
+
+  return { typedText, isComplete };
 };

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AvengerContext } from "../context/AvengerContext";
+import { useAuth } from "../context/AuthContext";
+import { getAvengers } from "../services/firebaseService";
+import { updateUserSelectedHeroes } from "../services/authService";
 import { animated, useSpring } from "@react-spring/web";
 import { useFadeIn, useScaleIn, useSlideIn } from "../utils/animations";
 import ParticleBackground from "../components/ParticleBackground";
@@ -22,19 +25,47 @@ import ironManImg3 from "../assets/IronMan3.jpg";
 import ironManImg2 from "../assets/IronMan6.jpg";
 import ironManImg from "../assets/IronMan2.jpg";
 import Navbar from "../components/Navbar";
-import { useTrail } from "@react-spring/web";
+import { useTrail, useSprings, config } from "@react-spring/web";
 
 export default function HeroSelection() {
   const navigate = useNavigate();
   const { selectAvenger } = useContext(AvengerContext);
+  const { currentUser } = useAuth();
   const [hoveredHero, setHoveredHero] = useState(null);
+  const [avengers, setAvengers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch avengers from Firebase
+  useEffect(() => {
+    const fetchAvengers = async () => {
+      try {
+        setLoading(true);
+        const avengersList = await getAvengers();
+        if (avengersList.length > 0) {
+          setAvengers(avengersList);
+        } else {
+          // Fallback to hardcoded avengers if Firebase fetch fails
+          console.log('No avengers found in Firestore, using fallback data');
+          setAvengers(fallbackAvengers);
+        }
+      } catch (error) {
+        console.error('Error fetching avengers:', error);
+        setAvengers(fallbackAvengers);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchAvengers();
+  }, []);
 
   // Animation hooks
   const [heroSectionRef, heroSectionProps] = useFadeIn(200);
   const [gridRef, gridProps] = useScaleIn(400);
   const [ctaRef, ctaProps] = useSlideIn("bottom", 600);
 
-  const avengers = [
+  // Fallback avengers data in case Firebase fetch fails
+  const fallbackAvengers = [
     {
       id: "spiderman",
       name: "Spider-Man",
@@ -187,20 +218,70 @@ export default function HeroSelection() {
     delay: 200, // Initial delay
   });
 
-  const handleHeroSelect = (hero) => {
-    selectAvenger(hero);
-    navigate("/");
+  const handleHeroSelect = async (hero) => {
+    console.log('Selecting hero:', hero.name);
+    
+    try {
+      // First select the avenger in context
+      await selectAvenger(hero);
+      
+      // If user is authenticated, update their selected heroes in Firebase
+      if (currentUser && currentUser.uid) {
+        console.log('Updating user selected heroes for:', currentUser.uid);
+        await updateUserSelectedHeroes(currentUser.uid, hero);
+      } else {
+        console.warn('Cannot update user selected heroes: No authenticated user');
+      }
+      
+      // Navigate to home page
+      console.log('Navigating to home page');
+      navigate("/");
+    } catch (error) {
+      console.error("Error in hero selection process:", error);
+    }
   };
 
-  // Hero card hover animation
-  const getHeroSpring = (isHovered) =>
-    useSpring({
+  // // Hero card hover animation
+  // const getHeroSpring = (isHovered) =>
+  //   useSpring({
+  //     scale: isHovered ? 1.05 : 1,
+  //     boxShadow: isHovered
+  //       ? "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)"
+  //       : "0 0 0 0 rgba(0, 0, 0, 0)",
+  //     config: { tension: 300, friction: 20 },
+  //   });
+
+const [springs, api] = useSprings(avengers.length, index => ({
+  scale: 1,
+  boxShadow: '0 0 0 0 rgba(0, 0, 0, 0)',
+}));
+
+
+useEffect(() => {
+  api.start(index => {
+    const isHovered = avengers[index]?.id === hoveredHero;
+    return {
       scale: isHovered ? 1.05 : 1,
       boxShadow: isHovered
-        ? "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)"
-        : "0 0 0 0 rgba(0, 0, 0, 0)",
-      config: { tension: 300, friction: 20 },
-    });
+        ? '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)'
+        : '0 0 0 0 rgba(0, 0, 0, 0)',
+    };
+  });
+}, [hoveredHero, api, avengers]);
+
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden flex items-center justify-center">
+        <ParticleBackground />
+        <Navbar />
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white text-xl">Loading Avengers...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
@@ -250,12 +331,12 @@ export default function HeroSelection() {
             {trail.map((style, index) => {
               const hero = avengers[index];
               const isHovered = hoveredHero === hero.id;
-              const hoverSpring = getHeroSpring(isHovered);
+              // const hoverSpring = getHeroSpring(isHovered);
 
               return (
                 <animated.div
                   key={hero.id}
-                  style={{ ...style, ...hoverSpring }}
+                  style={{ ...trail[index], ...springs[index] }}
                   className="group relative cursor-pointer w-full max-w-[250px]"
                   onMouseEnter={() => setHoveredHero(hero.id)}
                   onMouseLeave={() => setHoveredHero(null)}
