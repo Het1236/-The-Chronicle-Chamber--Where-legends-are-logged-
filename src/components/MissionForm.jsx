@@ -1,8 +1,14 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AvengerContext } from "../context/AvengerContext";
 
 export default function MissionForm() {
-  const { selectedAvenger, addMission } = useContext(AvengerContext);
+  const {
+    selectedAvenger,
+    addMission,
+    editingMission,
+    setEditingMission,
+    updateMission,
+  } = useContext(AvengerContext);
   const [formData, setFormData] = useState({
     title: "",
     location: "",
@@ -10,19 +16,44 @@ export default function MissionForm() {
     priority: "Medium",
     description: "",
     threat: "Low",
+    duration: "",
   });
+
+  useEffect(() => {
+    if (editingMission) {
+      setFormData(editingMission);
+    } else {
+      setFormData({
+        title: "",
+        location: "",
+        date: "",
+        priority: "Medium",
+        description: "",
+        threat: "Low",
+        duration: "",
+      });
+    }
+  }, [editingMission]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const mission = {
-      ...formData,
-      id: Date.now(),
-      hero: selectedAvenger.name,
-      heroId: selectedAvenger.id,
-      heroImage: selectedAvenger.image,
-      timestamp: new Date().toISOString(),
-    };
-    addMission(mission);
+    if (editingMission) {
+      updateMission({
+        ...formData,
+        hero: selectedAvenger.name,
+        heroId: selectedAvenger.id,
+        heroImage: selectedAvenger.image,
+      });
+    } else {
+      addMission({
+        ...formData,
+        id: Date.now(),
+        hero: selectedAvenger.name,
+        heroId: selectedAvenger.id,
+        heroImage: selectedAvenger.image,
+        timestamp: new Date().toISOString(),
+      });
+    }
     setFormData({
       title: "",
       location: "",
@@ -30,6 +61,7 @@ export default function MissionForm() {
       priority: "Medium",
       description: "",
       threat: "Low",
+      duration: "",
     });
   };
 
@@ -47,22 +79,23 @@ export default function MissionForm() {
           <div
             className="w-14 h-14 bg-cover bg-center bg-no-repeat rounded-full border-2 border-red-500"
             style={{
-              backgroundImage: `url(${selectedAvenger.image1})`
+              backgroundImage: `url(${selectedAvenger.image1})`,
             }}
           ></div>
           <div>
             <h2 className="text-2xl font-bold text-white">Log New Mission </h2>
             <p className="text-gray-400">
-              Logging as <span className="text-red-500">{selectedAvenger.name}</span> ({selectedAvenger.basicInfo.realName})
+              Logging as{" "}
+              <span className="text-red-500">{selectedAvenger.name}</span> (
+              {selectedAvenger.basicInfo.realName})
             </p>
-          <p className="text-gray-300">
-            Record your heroic activities and track your progress
-          </p>
+            <p className="text-gray-300">
+              Record your heroic activities and track your progress
+            </p>
           </div>
         </div>
 
-
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" id="mission-form">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Mission Title */}
             <div>
@@ -174,12 +207,22 @@ export default function MissionForm() {
 
           {/* Submit Button */}
           <div className="text-center pt-4">
+            {editingMission && (
+              <button
+                type="button"
+                className="bg-gray-600 text-white px-6 py-2 rounded font-bold"
+                onClick={() => setEditingMission(null)}
+              >
+                Cancel
+              </button>
+            )}
             <button
               type="submit"
-              className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-medium cursor-pointer transition-colors flex items-center gap-2 mx-auto whitespace-nowrap"
+              className={`bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded font-bold transition-all ${
+                editingMission ? "animate__animated animate__pulse" : ""
+              }`}
             >
-              <i className="ri-add-line"></i>
-              Log Mission
+              {editingMission ? "Update Mission" : "Add Mission"}
             </button>
           </div>
         </form>
