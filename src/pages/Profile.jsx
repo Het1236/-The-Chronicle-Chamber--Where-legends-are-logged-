@@ -179,20 +179,29 @@ const Profile = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {selectedHeroes.map((hero) => (
-                  <div key={hero.id} className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 flex items-center hover:bg-slate-700 transition-colors">
-                    <div 
-                      className="w-12 h-12 rounded-full bg-cover bg-center mr-4 border-2 border-red-500"
-                      style={{ backgroundImage: `url(${hero.image1})` }}
-                    ></div>
-                    <div>
-                      <h3 className="text-white font-bold">{hero.name}</h3>
-                      <p className="text-gray-400 text-sm">{hero.alias}</p>
+                  <div key={hero.id} className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 flex flex-col hover:bg-slate-700 transition-colors">
+                    <div className="flex items-center mb-3">
+                      <div 
+                        className="w-12 h-12 rounded-full bg-cover bg-center mr-4 border-2 border-red-500"
+                        style={{ backgroundImage: `url(${hero.image1})` }}
+                      ></div>
+                      <div>
+                        <h3 className="text-white font-bold">{hero.name}</h3>
+                        <p className="text-gray-400 text-sm">{hero.alias}</p>
+                      </div>
+                      <div className="ml-auto">
+                        <span className="inline-block px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">
+                          {userMissions.filter(m => m.heroId === hero.id).length} missions
+                        </span>
+                      </div>
                     </div>
-                    <div className="ml-auto">
-                      <span className="inline-block px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">
-                        {userMissions.filter(m => m.heroId === hero.id).length} missions
-                      </span>
-                    </div>
+                    <button 
+                      onClick={() => navigate(`/avenger/${hero.id}`)}
+                      className="w-full mt-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors flex items-center justify-center"
+                    >
+                      <i className="ri-information-line mr-1"></i>
+                      View Hero Details
+                    </button>
                   </div>
                 ))}
               </div>
