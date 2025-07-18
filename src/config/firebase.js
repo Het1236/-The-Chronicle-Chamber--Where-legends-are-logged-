@@ -13,16 +13,7 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//   apiKey: "AIzaSyA_DMljZ-JzYADkgN8O5rs_xk5hHOc1n4A",
-//   authDomain: "the-chronicle-chamber.firebaseapp.com",
-//   projectId: "the-chronicle-chamber",
-//   storageBucket: "the-chronicle-chamber.firebasestorage.app",
-//   messagingSenderId: "913451149132",
-//   appId: "1:913451149132:web:2264ae507b2bf118fad1e9",
-//   measurementId: "G-T9XKEK5Q2G"
-// };
+
 
 const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
