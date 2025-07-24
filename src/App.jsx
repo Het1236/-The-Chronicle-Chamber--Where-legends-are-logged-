@@ -8,6 +8,7 @@ import Missions from './pages/Missions';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
 import AvengerDetail from './pages/AvengerDetail';
+import MissionDetail from './pages/MissionDetail';
 import Error404 from './pages/Error404';
 import ParticleBackground from './components/ParticleBackground';
 import { initializeAvengersInFirestore, migrateLocalStorageToFirestore } from './utils/initializeFirebase';
@@ -100,6 +101,11 @@ function AppContent() {
         <Route path="/avenger/:id" element={
           <PrivateRoute>
             <AvengerDetail />
+          </PrivateRoute>
+        } />
+        <Route path="/mission/:id" element={
+          <PrivateRoute>
+            <MissionDetail />
           </PrivateRoute>
         } />
         <Route path="/404" element={<Error404 />} />

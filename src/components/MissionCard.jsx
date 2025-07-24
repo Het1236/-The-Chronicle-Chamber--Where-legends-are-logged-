@@ -1,25 +1,54 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AvengerContext } from "../context/AvengerContext";
 
 export default function MissionCard({ mission }) {
+  const navigate = useNavigate();
   const { selectedAvenger, setEditingMission, deleteMission } = useContext(AvengerContext);
 
-  const handleEdit = () => {
+  const handleEdit = (e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    e.preventDefault(); // Prevent default behavior
+    
+    console.log("Editing mission:", mission);
     setEditingMission(mission);
+    
+    // Scroll to the form
     const form = document.getElementById("mission-form");
     if (form) {
       form.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
   
-  const handleDelete = () => {
+  const handleDelete = async (e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    e.preventDefault(); // Prevent default behavior
+    
+    console.log("Attempting to delete mission:", mission);
+    
     if (window.confirm("Are you sure you want to delete this mission?")) {
-      deleteMission(mission.id);
+      try {
+        console.log("Confirmed deletion for mission ID:", mission.id);
+        await deleteMission(mission.id);
+        console.log("Mission deleted successfully");
+      } catch (error) {
+        console.error("Error deleting mission:", error);
+        alert("There was an error deleting the mission. Please try again.");
+      }
+    } else {
+      console.log("Mission deletion cancelled");
     }
   };
 
+  const handleCardClick = () => {
+    navigate(`/mission/${mission.id}`);
+  };
+
   return (
-    <div className="group relative h-80 w-72 cursor-pointer perspective-[1200px]">
+    <div 
+      className="group relative h-80 w-72 cursor-pointer perspective-[1200px]"
+      onClick={handleCardClick}
+    >
       <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
         {/* Front Side */}
         <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] rounded-2xl overflow-hidden shadow-2xl z-10">
@@ -111,33 +140,27 @@ export default function MissionCard({ mission }) {
                     Threat: {mission.threat}
                   </span>
                 </div>
-                {/* Action Buttons at Bottom Right */}
-                <div className="absolute bottom-4 right-4 flex gap-2">
-                  <button
-                    onClick={handleDelete}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-white bg-red-500/30 backdrop-blur-md border border-red-500/30 shadow-xl hover:bg-red-500/50 transition-all animate__animated animate__fadeIn"
-                    title="Delete Mission"
-                    style={{
-                      minWidth: 90,
-                      boxShadow: "0 4px 24px 0 rgba(255,80,80,0.15)",
-                      border: "1.5px solid rgba(255,80,80,0.25)",
-                    }}
-                  >
-                    <i className="ri-delete-bin-line text-lg"></i>
-                    <span>Delete</span>
-                  </button>
+                {/* Action Buttons at Bottom */}
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3">
                   <button
                     onClick={handleEdit}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-white bg-white/20 backdrop-blur-md border border-white/30 shadow-xl hover:bg-white/30 transition-all animate__animated animate__fadeIn"
+                    className="flex items-center justify-center gap-1 px-4 py-1.5 rounded-md font-medium text-white bg-blue-600/80 hover:bg-blue-600 transition-all shadow-lg backdrop-blur-sm"
                     title="Edit Mission"
-                    style={{
-                      minWidth: 90,
-                      boxShadow: "0 4px 24px 0 rgba(80,120,255,0.15)",
-                      border: "1.5px solid rgba(255,255,255,0.25)",
-                    }}
                   >
-                    <i className="ri-edit-2-line text-lg"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
                     <span>Edit</span>
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="flex items-center justify-center gap-1 px-4 py-1.5 rounded-md font-medium text-white bg-red-600/80 hover:bg-red-600 transition-all shadow-lg backdrop-blur-sm"
+                    title="Delete Mission"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <span>Delete</span>
                   </button>
                 </div>
               </div>

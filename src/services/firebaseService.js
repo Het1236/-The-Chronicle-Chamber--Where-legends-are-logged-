@@ -267,6 +267,8 @@ export const updateMission = async (mission) => {
           return;
         }
         
+        console.log("Firebase: Updating mission with ID:", mission.id);
+        
         const { id, ...missionData } = mission;
         // First check if this mission belongs to the current user
         const missionRef = doc(db, MISSIONS_COLLECTION, id);
@@ -285,13 +287,17 @@ export const updateMission = async (mission) => {
           return;
         }
         
-        // Ensure we don't change the uid when updating
+        // Ensure we don't change the uid when updating and add timestamp
         const secureUpdatedMission = {
           ...missionData,
-          uid: user.uid // Ensure the uid stays the same
+          uid: user.uid, // Ensure the uid stays the same
+          updatedAt: new Date().toISOString() // Add timestamp for when it was updated
         };
         
+        console.log("Firebase: Updating document with data:", secureUpdatedMission);
         await updateDoc(missionRef, secureUpdatedMission);
+        
+        console.log("Firebase: Mission updated successfully");
         resolve({
           id,
           ...secureUpdatedMission
@@ -299,12 +305,12 @@ export const updateMission = async (mission) => {
       });
     });
   } catch (error) {
-    console.error('Error updating mission:', error);
-    return null;
+    console.error('Firebase: Error updating mission:', error);
+    throw error; // Re-throw the error to be handled by the caller
   }
 };
 
-export const deleteMission = async (id) => {
+export const deleteMission = async (missionId) => {
   try {
     // Wait for auth state to be initialized
     return new Promise((resolve) => {
@@ -317,8 +323,10 @@ export const deleteMission = async (id) => {
           return;
         }
         
+        console.log("Firebase: Deleting mission with ID:", missionId);
+        
         // First check if this mission belongs to the current user
-        const missionRef = doc(db, MISSIONS_COLLECTION, id);
+        const missionRef = doc(db, MISSIONS_COLLECTION, missionId);
         const missionSnap = await getDoc(missionRef);
         
         if (!missionSnap.exists()) {
@@ -336,11 +344,12 @@ export const deleteMission = async (id) => {
         
         // Now we can safely delete the mission
         await deleteDoc(missionRef);
+        console.log("Firebase: Mission deleted successfully");
         resolve(true);
       });
     });
   } catch (error) {
-    console.error('Error deleting mission:', error);
-    return false;
+    console.error('Firebase: Error deleting mission:', error);
+    throw error; // Re-throw the error to be handled by the caller
   }
 };

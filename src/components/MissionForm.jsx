@@ -21,8 +21,26 @@ export default function MissionForm() {
 
   useEffect(() => {
     if (editingMission) {
-      setFormData(editingMission);
+      // Scroll to the form when editing mission is set
+      const form = document.getElementById("mission-form");
+      if (form) {
+        form.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      
+      // Set form data from the editing mission
+      setFormData({
+        ...editingMission,
+        // Ensure all required fields are present
+        title: editingMission.title || "",
+        location: editingMission.location || "",
+        date: editingMission.date || "",
+        priority: editingMission.priority || "Medium",
+        description: editingMission.description || "",
+        threat: editingMission.threat || "Low",
+        duration: editingMission.duration || "",
+      });
     } else {
+      // Reset form data when not editing
       setFormData({
         title: "",
         location: "",
@@ -35,34 +53,56 @@ export default function MissionForm() {
     }
   }, [editingMission]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editingMission) {
-      updateMission({
-        ...formData,
-        hero: selectedAvenger.name,
-        heroId: selectedAvenger.id,
-        heroImage: selectedAvenger.image3,
+    
+    try {
+      if (editingMission) {
+        console.log("Updating mission:", formData);
+        // Make sure we preserve the ID when updating
+        const updatedMission = {
+          ...formData,
+          id: editingMission.id, // Ensure ID is preserved
+          hero: selectedAvenger.name,
+          heroId: selectedAvenger.id,
+          heroImage: selectedAvenger.image3,
+        };
+        
+        // Call the update function
+        await updateMission(updatedMission);
+        console.log("Mission updated successfully");
+      } else {
+        console.log("Adding new mission");
+        // Add a new mission
+        await addMission({
+          ...formData,
+          hero: selectedAvenger.name,
+          heroId: selectedAvenger.id,
+          heroImage: selectedAvenger.image3,
+          timestamp: new Date().toISOString(),
+        });
+        console.log("Mission added successfully");
+      }
+      
+      // Reset the form
+      setFormData({
+        title: "",
+        location: "",
+        date: "",
+        priority: "Medium",
+        description: "",
+        threat: "Low",
+        duration: "",
       });
-    } else {
-      addMission({
-        ...formData,
-        id: Date.now(),
-        hero: selectedAvenger.name,
-        heroId: selectedAvenger.id,
-        heroImage: selectedAvenger.image3,
-        timestamp: new Date().toISOString(),
-      });
+      
+      // Clear editing state
+      if (editingMission) {
+        setEditingMission(null);
+      }
+    } catch (error) {
+      console.error("Error saving mission:", error);
+      alert("There was an error saving the mission. Please try again.");
     }
-    setFormData({
-      title: "",
-      location: "",
-      date: "",
-      priority: "Medium",
-      description: "",
-      threat: "Low",
-      duration: "",
-    });
   };
 
   const handleChange = (e) => {
@@ -158,7 +198,6 @@ export default function MissionForm() {
                   <option value="Medium">Medium Priority</option>
                   <option value="High">High Priority</option>
                 </select>
-                <i className="ri-arrow-down-s-line absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
               </div>
             </div>
 
@@ -179,7 +218,6 @@ export default function MissionForm() {
                   <option value="High">High Threat</option>
                   <option value="Critical">Critical Threat</option>
                 </select>
-                <i className="ri-arrow-down-s-line absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
               </div>
             </div>
           </div>

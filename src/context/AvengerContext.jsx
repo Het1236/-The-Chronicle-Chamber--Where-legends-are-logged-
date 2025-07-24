@@ -84,28 +84,53 @@ export function AvengerProvider({ children }) {
 
   const updateMission = async (updatedMission) => {
     try {
+      console.log("AvengerContext: Updating mission with ID:", updatedMission.id);
+      
+      // Ensure the mission has an ID
+      if (!updatedMission.id) {
+        throw new Error("Cannot update mission without an ID");
+      }
+      
+      // Call Firebase service to update the mission
       const result = await updateMissionInFirebase(updatedMission);
+      
       if (result) {
-        const updated = missions.map((m) =>
-          m.id === updatedMission.id ? { ...updatedMission } : m
+        // Update local state
+        const updatedMissions = missions.map((mission) =>
+          mission.id === updatedMission.id ? updatedMission : mission
         );
-        setMissions(updated);
+        
+        setMissions(updatedMissions);
         setEditingMission(null);
+        
+        console.log("AvengerContext: Mission updated successfully");
+        return true;
       }
     } catch (error) {
-      console.error("Error updating mission:", error);
+      console.error("AvengerContext: Error updating mission:", error);
+      throw error; // Re-throw to allow handling in the component
     }
   };
 
   const deleteMission = async (id) => {
     try {
+      console.log("AvengerContext: Deleting mission with ID:", id);
+      
+      // Call Firebase service to delete the mission
       const success = await deleteMissionFromFirebase(id);
+      
       if (success) {
+        // Update local state by filtering out the deleted mission
         const updated = missions.filter((m) => m.id !== id);
         setMissions(updated);
+        console.log("AvengerContext: Mission deleted successfully");
+        return true;
+      } else {
+        throw new Error("Failed to delete mission");
       }
     } catch (error) {
-      console.error("Error deleting mission:", error);
+      console.error("AvengerContext: Error deleting mission:", error);
+      throw error; // Re-throw to allow handling in the component
     }
   };
 

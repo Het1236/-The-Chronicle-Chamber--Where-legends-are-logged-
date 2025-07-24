@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <filter id="webGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Web structure -->
+  <g filter="url(#webGlow)" stroke="#B71C1C" fill="none" stroke-opacity="0.8">
+    <!-- Radial lines -->
+    <g>
+      <!-- Line 1 -->
+      <line x1="50" y1="50" x2="50" y2="5" stroke-width="1.5">
+        <animate attributeName="x2" values="50;50" dur="0.5s" begin="0s" repeatCount="1" />
+        <animate attributeName="y2" values="50;5" dur="0.5s" begin="0s" repeatCount="1" />
+      </line>
+      
+      <!-- Line 2 -->
+      <line x1="50" y1="50" x2="95" y2="50" stroke-width="1.5">
+        <animate attributeName="x2" values="50;95" dur="0.5s" begin="0.1s" repeatCount="1" />
+        <animate attributeName="y2" values="50;50" dur="0.5s" begin="0.1s" repeatCount="1" />
+      </line>
+      
+      <!-- Line 3 -->
+      <line x1="50" y1="50" x2="50" y2="95" stroke-width="1.5">
+        <animate attributeName="x2" values="50;50" dur="0.5s" begin="0.2s" repeatCount="1" />
+        <animate attributeName="y2" values="50;95" dur="0.5s" begin="0.2s" repeatCount="1" />
+      </line>
+      
+      <!-- Line 4 -->
+      <line x1="50" y1="50" x2="5" y2="50" stroke-width="1.5">
+        <animate attributeName="x2" values="50;5" dur="0.5s" begin="0.3s" repeatCount="1" />
+        <animate attributeName="y2" values="50;50" dur="0.5s" begin="0.3s" repeatCount="1" />
+      </line>
+      
+      <!-- Diagonal Line 1 -->
+      <line x1="50" y1="50" x2="85" y2="15" stroke-width="1.5">
+        <animate attributeName="x2" values="50;85" dur="0.5s" begin="0.4s" repeatCount="1" />
+        <animate attributeName="y2" values="50;15" dur="0.5s" begin="0.4s" repeatCount="1" />
+      </line>
+      
+      <!-- Diagonal Line 2 -->
+      <line x1="50" y1="50" x2="85" y2="85" stroke-width="1.5">
+        <animate attributeName="x2" values="50;85" dur="0.5s" begin="0.5s" repeatCount="1" />
+        <animate attributeName="y2" values="50;85" dur="0.5s" begin="0.5s" repeatCount="1" />
+      </line>
+      
+      <!-- Diagonal Line 3 -->
+      <line x1="50" y1="50" x2="15" y2="85" stroke-width="1.5">
+        <animate attributeName="x2" values="50;15" dur="0.5s" begin="0.6s" repeatCount="1" />
+        <animate attributeName="y2" values="50;85" dur="0.5s" begin="0.6s" repeatCount="1" />
+      </line>
+      
+      <!-- Diagonal Line 4 -->
+      <line x1="50" y1="50" x2="15" y2="15" stroke-width="1.5">
+        <animate attributeName="x2" values="50;15" dur="0.5s" begin="0.7s" repeatCount="1" />
+        <animate attributeName="y2" values="50;15" dur="0.5s" begin="0.7s" repeatCount="1" />
+      </line>
+    </g>
+    
+    <!-- Concentric circles -->
+    <g>
+      <!-- Circle 1 -->
+      <circle cx="50" cy="50" r="0" stroke-width="1">
+        <animate attributeName="r" values="0;15" dur="0.5s" begin="0.8s" repeatCount="1" />
+      </circle>
+      
+      <!-- Circle 2 -->
+      <circle cx="50" cy="50" r="0" stroke-width="1">
+        <animate attributeName="r" values="0;30" dur="0.5s" begin="1s" repeatCount="1" />
+      </circle>
+      
+      <!-- Circle 3 -->
+      <circle cx="50" cy="50" r="0" stroke-width="1">
+        <animate attributeName="r" values="0;45" dur="0.5s" begin="1.2s" repeatCount="1" />
+      </circle>
+    </g>
+    
+    <!-- Web connectors -->
+    <g stroke-width="0.7" stroke-dasharray="2 2">
+      <!-- Connector 1 -->
+      <path d="M50,20 Q60,35 70,30" opacity="0">
+        <animate attributeName="opacity" values="0;1" dur="0.3s" begin="1.4s" repeatCount="1" />
+      </path>
+      
+      <!-- Connector 2 -->
+      <path d="M70,50 Q55,60 60,70" opacity="0">
+        <animate attributeName="opacity" values="0;1" dur="0.3s" begin="1.5s" repeatCount="1" />
+      </path>
+      
+      <!-- Connector 3 -->
+      <path d="M50,70 Q35,60 30,70" opacity="0">
+        <animate attributeName="opacity" values="0;1" dur="0.3s" begin="1.6s" repeatCount="1" />
+      </path>
+      
+      <!-- Connector 4 -->
+      <path d="M30,50 Q40,35 30,30" opacity="0">
+        <animate attributeName="opacity" values="0;1" dur="0.3s" begin="1.7s" repeatCount="1" />
+      </path>
+      
+      <!-- Connector 5 -->
+      <path d="M65,35 Q50,50 65,65" opacity="0">
+        <animate attributeName="opacity" values="0;1" dur="0.3s" begin="1.8s" repeatCount="1" />
+      </path>
+      
+      <!-- Connector 6 -->
+      <path d="M35,65 Q50,50 35,35" opacity="0">
+        <animate attributeName="opacity" values="0;1" dur="0.3s" begin="1.9s" repeatCount="1" />
+      </path>
+    </g>
+  </g>
+  
+  <!-- Center spider symbol -->
+  <g transform="translate(50, 50) scale(0)">
+    <animate attributeName="transform" type="scale" from="0" to="1" begin="0s" dur="0.5s" fill="freeze" />
+    <circle cx="0" cy="0" r="5" fill="#B71C1C" opacity="0.9" />
+    <path d="M0,-5 L3,0 L0,5 L-3,0 Z" fill="#000" />
+  </g>
+</svg>

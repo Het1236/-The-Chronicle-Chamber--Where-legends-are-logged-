@@ -1,0 +1,444 @@
+/* MissionMap.css - Custom animations for Avenger-themed map effects */
+
+/* Iron Man repulsor blast animation */
+@keyframes repulsorBlast {
+  0% {
+    box-shadow: 0 0 0 0 rgba(30, 144, 255, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(30, 144, 255, 0);
+    transform: scale(1.2);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(30, 144, 255, 0);
+    transform: scale(1);
+  }
+}
+
+/* Doctor Strange portal animation */
+@keyframes strangePortal {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.4);
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    box-shadow: 0 0 0 20px rgba(255, 140, 0, 0.2);
+    transform: scale(1.5) rotate(180deg);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 140, 0, 0);
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+/* Thor's hammer strike animation */
+@keyframes thorHammer {
+  0% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  25% {
+    filter: brightness(1.5);
+    transform: scale(1.1);
+  }
+  50% {
+    filter: brightness(2);
+    transform: scale(1.2);
+  }
+  75% {
+    filter: brightness(1.5);
+    transform: scale(1.1);
+  }
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+}
+
+/* Animation classes */
+.iron-man-effect {
+  animation: repulsorBlast 1s ease-out;
+}
+
+.strange-effect {
+  animation: strangePortal 1.5s ease-in-out;
+}
+
+.thor-effect {
+  animation: thorHammer 1s ease-in-out;
+}
+
+/* Scarlet Witch chaos magic effect */
+.witch-effect {
+  animation: chaosWave 2s ease-in-out;
+}
+
+@keyframes chaosWave {
+  0% {
+    box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.7);
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    box-shadow: 0 0 0 20px rgba(233, 30, 99, 0.3);
+    transform: scale(1.3) rotate(180deg);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(233, 30, 99, 0);
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+/* Spider-Man web effect */
+.spiderman-effect {
+  animation: webShot 1.2s ease-out;
+}
+
+@keyframes webShot {
+  0% {
+    box-shadow: 0 0 0 0 rgba(183, 28, 28, 0.7);
+    transform: scale(1);
+  }
+  40% {
+    box-shadow: 0 0 0 10px rgba(183, 28, 28, 0.4);
+    transform: scale(1.2);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(183, 28, 28, 0.2);
+    transform: scale(1.1);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(183, 28, 28, 0);
+    transform: scale(1);
+  }
+}
+
+/* Animation overlays */
+.animation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Enhanced Scarlet Witch chaos magic effect */
+.scarlet-witch-effect {
+  background: radial-gradient(circle at center, rgba(233, 30, 99, 0.8) 0%, rgba(233, 30, 99, 0) 70%);
+  animation: witchChaos 2s ease-out forwards;
+}
+
+@keyframes witchChaos {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: scale(0.1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(5px);
+    transform: scale(1) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(0px);
+    transform: scale(1.5) rotate(360deg);
+  }
+}
+
+/* Enhanced Spider-Man web effect */
+.spider-man-effect {
+  background-image: 
+    radial-gradient(circle at center, rgba(183, 28, 28, 0.1) 0%, rgba(183, 28, 28, 0) 70%),
+    repeating-conic-gradient(rgba(183, 28, 28, 0) 0deg, rgba(183, 28, 28, 0) 15deg, rgba(183, 28, 28, 0.5) 16deg, rgba(183, 28, 28, 0) 17deg);
+  background-size: 100% 100%, 50px 50px;
+  animation: spiderWeb 2s ease-out forwards;
+}
+
+@keyframes spiderWeb {
+  0% {
+    opacity: 0;
+    background-size: 0% 0%, 0px 0px;
+  }
+  50% {
+    opacity: 0.8;
+    background-size: 100% 100%, 25px 25px;
+  }
+  100% {
+    opacity: 0;
+    background-size: 200% 200%, 50px 50px;
+  }
+}
+
+/* Custom marker styles */
+.mission-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transform-origin: bottom center;
+}
+
+.mission-marker:hover {
+  transform: scale(1.2) translateY(-5px);
+  filter: brightness(1.3);
+  z-index: 1000;
+}
+
+.mission-marker.easy {
+  background-color: rgba(76, 175, 80, 0.8);
+}
+
+.mission-marker.advanced {
+  background-color: rgba(255, 152, 0, 0.8);
+}
+
+.mission-marker.expert {
+  background-color: rgba(244, 67, 54, 0.8);
+}
+
+.mission-marker .marker-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Hero-specific marker styles */
+.iron-man-marker svg {
+  filter: drop-shadow(0 0 3px rgba(255, 235, 59, 0.8));
+  animation: pulse 2s infinite;
+}
+
+.thor-marker svg {
+  filter: drop-shadow(0 0 3px rgba(33, 150, 243, 0.8));
+  animation: hammer-pulse 3s infinite;
+}
+
+.spiderman-marker svg {
+  filter: drop-shadow(0 0 3px rgba(183, 28, 28, 0.8));
+  animation: swing 3s ease-in-out infinite;
+}
+
+.strange-marker svg {
+  filter: drop-shadow(0 0 3px rgba(255, 152, 0, 0.8));
+  animation: rotate 8s linear infinite;
+}
+
+.witch-marker svg {
+  filter: drop-shadow(0 0 3px rgba(233, 30, 99, 0.8));
+  animation: chaos-pulse 4s ease-in-out infinite;
+}
+
+.avenger-marker svg {
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+  animation: pulse 3s infinite;
+}
+
+/* Animations for markers */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes hammer-pulse {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(5deg); }
+  50% { transform: scale(1) rotate(0deg); }
+  75% { transform: scale(1.1) rotate(-5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes swing {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes chaos-pulse {
+  0% { filter: drop-shadow(0 0 3px rgba(233, 30, 99, 0.8)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 8px rgba(233, 30, 99, 1)); transform: scale(1.15); }
+  100% { filter: drop-shadow(0 0 3px rgba(233, 30, 99, 0.8)); transform: scale(1); }
+}
+
+.mission-popup {
+  min-width: 280px;
+  padding: 15px;
+  animation: fadeIn 0.3s ease-in-out;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Roboto', sans-serif;
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mission-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.mission-popup-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.mission-priority {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.mission-priority.high {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #d32f2f;
+}
+
+.mission-priority.medium {
+  background-color: rgba(255, 152, 0, 0.2);
+  color: #f57c00;
+}
+
+.mission-priority.low {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #388e3c;
+}
+
+.mission-popup-content {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+.mission-popup-content p {
+  margin: 5px 0;
+}
+
+.mission-description {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.15);
+}
+
+.description-text {
+  font-style: italic;
+  color: #444;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  max-height: 80px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.mission-popup-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.zoom-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: rgba(33, 150, 243, 0.85);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.zoom-button:hover {
+  background-color: rgba(25, 118, 210, 0.95);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.zoom-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar styling for description */
+.description-text::-webkit-scrollbar {
+  width: 4px;
+}
+
+.description-text::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.description-text::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.description-text::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Lightning overlay for Thor effect */
+.lightning-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  background: url('/lightning.svg') center no-repeat;
+  background-size: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.lightning-overlay.active {
+  background-size: 100%;
+  opacity: 0.7;
+}
