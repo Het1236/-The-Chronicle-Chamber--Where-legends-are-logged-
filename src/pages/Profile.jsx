@@ -15,7 +15,6 @@ const Profile = () => {
   const { missions, loading: missionsLoading } = useContext(AvengerContext);
   const [userMissions, setUserMissions] = useState([]);
   const [activeMissions, setActiveMissions] = useState([]);
-  const [completedMissions, setCompletedMissions] = useState([]);
   const [selectedHeroes, setSelectedHeroes] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -48,21 +47,7 @@ const Profile = () => {
           });
           
           setUserMissions(userMissions);
-          
-          // Separate active and completed missions (for demo purposes, we'll consider missions with date in the future as active)
-          const now = new Date();
-          const active = userMissions.filter(mission => {
-            const missionDate = new Date(mission.date);
-            return missionDate >= now;
-          });
-          
-          const completed = userMissions.filter(mission => {
-            const missionDate = new Date(mission.date);
-            return missionDate < now;
-          });
-          
-          setActiveMissions(active);
-          setCompletedMissions(completed);
+          setActiveMissions(userMissions);
         }
         
         setLoading(false);
@@ -208,11 +193,11 @@ const Profile = () => {
             )}
           </animated.div>
           
-          {/* Active Missions */}
+          {/* Missions */}
           <animated.div ref={missionsRef} style={missionsProps} className="bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-lg p-6">
             <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
               <i className="ri-rocket-fill text-red-500 mr-2"></i>
-              Active Missions
+              Missions
             </h2>
             
             {activeMissions.length === 0 ? (
@@ -278,56 +263,7 @@ const Profile = () => {
           </animated.div>
         </div>
         
-        {/* Completed Missions */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
-            <i className="ri-check-double-line text-green-500 mr-2"></i>
-            Completed Missions
-          </h2>
-          
-          {completedMissions.length === 0 ? (
-            <div className="text-center py-8 bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-lg">
-              <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="ri-history-line text-gray-400 text-2xl"></i>
-              </div>
-              <p className="text-gray-400">No completed missions yet</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {completedMissions.map((mission) => {
-                // Find the hero for this mission
-                const hero = selectedHeroes.find(h => h.id === mission.heroId);
-                
-                return (
-                  <div key={mission.id} className="bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-lg p-4 hover:bg-slate-700/80 transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-white font-bold">{mission.title}</h3>
-                      <span className="inline-block px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">
-                        Completed
-                      </span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-400 mb-2">
-                      <i className="ri-map-pin-line mr-1"></i>
-                      {mission.location}
-                      <span className="mx-2">•</span>
-                      <i className="ri-calendar-line mr-1"></i>
-                      {mission.date}
-                    </div>
-                    {hero && (
-                      <div className="flex items-center mt-2">
-                        <div 
-                          className="w-6 h-6 rounded-full bg-cover bg-center mr-2 border border-green-500"
-                          style={{ backgroundImage: `url(${hero.image1})` }}
-                        ></div>
-                        <span className="text-sm text-green-300">{hero.name}</span>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+
       </div>
     </div>
   );

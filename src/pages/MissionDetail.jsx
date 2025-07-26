@@ -8,6 +8,8 @@ import { useFadeIn, useScaleIn, useSlideIn } from '../utils/animations';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+// Note: We're dynamically importing react-geocode in the getCoordinatesForLocation function
+// to avoid potential issues with SSR or initialization order
 
 // Fix for Leaflet marker icons in webpack
 delete L.Icon.Default.prototype._getIconUrl;
@@ -131,36 +133,12 @@ const MissionDetail = () => {
     
     // Map of fictional Marvel locations to real-world coordinates
     const locationMap = {
-      // Major cities
-      'New York': { lat: 40.7128, lng: -74.0060 },
-      'New York City': { lat: 40.7128, lng: -74.0060 },
-      'Manhattan': { lat: 40.7831, lng: -73.9712 },
-      'Queens': { lat: 40.7282, lng: -73.7949 },
-      'Brooklyn': { lat: 40.6782, lng: -73.9442 },
-      'London': { lat: 51.5074, lng: -0.1278 },
-      'Tokyo': { lat: 35.6762, lng: 139.6503 },
-      'Paris': { lat: 48.8566, lng: 2.3522 },
-      'Moscow': { lat: 55.7558, lng: 37.6173 },
-      'Los Angeles': { lat: 34.0522, lng: -118.2437 },
-      'Chicago': { lat: 41.8781, lng: -87.6298 },
-      'Houston': { lat: 29.7604, lng: -95.3698 },
-      'Berlin': { lat: 52.5200, lng: 13.4050 },
-      'Rome': { lat: 41.9028, lng: 12.4964 },
-      'Madrid': { lat: 40.4168, lng: -3.7038 },
-      'Sydney': { lat: -33.8688, lng: 151.2093 },
-      'Mumbai': { lat: 19.0760, lng: 72.8777 },
-      'Beijing': { lat: 39.9042, lng: 116.4074 },
-      'Cairo': { lat: 30.0444, lng: 31.2357 },
-      'Rio de Janeiro': { lat: -22.9068, lng: -43.1729 },
-      'Toronto': { lat: 43.6532, lng: -79.3832 },
-      'Seoul': { lat: 37.5665, lng: 126.9780 },
-      'Mexico City': { lat: 19.4326, lng: -99.1332 },
-      
-      // Fictional Marvel locations
+      // Fictional Marvel locations only
       'Wakanda': { lat: -1.2921, lng: 36.8219 }, // Using Nairobi, Kenya as a stand-in
       'Sokovia': { lat: 45.8150, lng: 15.9819 }, // Using Zagreb, Croatia as a stand-in
       'Asgard': { lat: 60.3913, lng: 5.3221 }, // Using Bergen, Norway as a stand-in
       'Stark Tower': { lat: 40.7484, lng: -73.9857 }, // Using Empire State Building location
+      'Avengers Tower': { lat: 40.7484, lng: -73.9857 }, // Using Empire State Building location
       'Avengers Compound': { lat: 41.2565, lng: -73.6816 }, // Using location near Westchester, NY
       'Sanctum Sanctorum': { lat: 40.7294, lng: -74.0031 }, // Greenwich Village, NYC
       'Kamar-Taj': { lat: 27.7172, lng: 85.3240 }, // Using Kathmandu, Nepal
@@ -168,22 +146,68 @@ const MissionDetail = () => {
       'Genosha': { lat: -20.1609, lng: 57.5012 }, // Approximating to Mauritius
       'Madripoor': { lat: 1.3521, lng: 103.8198 }, // Approximating to Singapore
       'Attilan': { lat: 27.9881, lng: 86.9250 }, // Approximating to Himalayas
+      'Xandar': { lat: 51.5074, lng: -0.1278 }, // Using London as a stand-in
+      'Knowhere': { lat: 27.1750, lng: 78.0422 }, // Using Agra, India as a stand-in
+      'Titan': { lat: 36.1699, lng: -115.1398 }, // Using Las Vegas as a stand-in
+      'Vormir': { lat: 63.9850, lng: -22.6050 }, // Using Iceland as a stand-in
+      'Hala': { lat: 25.2048, lng: 55.2708 }, // Using Dubai as a stand-in
+      'Sakaar': { lat: -25.3444, lng: 131.0369 }, // Using Uluru, Australia as a stand-in
     };
 
-    // Check if we have a mapping for this location
+    // Check if we have a mapping for fictional Marvel locations
     for (const [key, value] of Object.entries(locationMap)) {
       if (location.toLowerCase().includes(key.toLowerCase())) {
-        console.log(`Found predefined coordinates for ${location}:`, value);
+        console.log(`Found predefined coordinates for fictional location ${location}:`, value);
         return value;
       }
     }
 
-    // If no match found, return default coordinates
-    console.log(`No predefined coordinates for ${location}, using default`);
-    // Return a random location near New York as fallback
-    const randomLat = 40.7128 + (Math.random() - 0.5) * 0.1;
-    const randomLng = -74.0060 + (Math.random() - 0.5) * 0.1;
-    return { lat: randomLat, lng: randomLng };
+    // If no match found in fictional locations, try to use the coordinates from the MissionMap component
+    try {
+      // Check if we can find this mission in the context
+      const missionInContext = missions.find(m => m.id === id);
+      if (missionInContext && missionInContext.coordinates) {
+        console.log(`Using stored coordinates for ${location}:`, missionInContext.coordinates);
+        return missionInContext.coordinates;
+      }
+    } catch (error) {
+      console.error('Error retrieving stored coordinates:', error);
+    }
+
+    // If no match found in fictional locations or stored coordinates, geocode it using the react-geocode library
+    console.log(`Attempting to geocode real-world location: ${location}`);
+    try {
+      // Import the geocoding functions from react-geocode
+      const { fromAddress, setKey, setLanguage, setRegion } = await import('react-geocode');
+      
+      // Check if API key is available
+      if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
+        console.warn("No Google Maps API key found. Geocoding may not work properly.");
+      }
+      
+      // Set up Geocode with Google Maps API
+      setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "");
+      setLanguage("en");
+      setRegion("us");
+      
+      // Make the geocoding request
+      const response = await fromAddress(location);
+      
+      if (response.results && response.results.length > 0) {
+        const { lat, lng } = response.results[0].geometry.location;
+        console.log(`Successfully geocoded ${location} to:`, { lat, lng });
+        return { lat, lng };
+      } else {
+        console.warn(`No geocoding results found for location: ${location}`);
+        // Fall back to NYC coordinates if geocoding fails
+        return { lat: 40.7128, lng: -74.0060 };
+      }
+    } catch (error) {
+      console.error(`Error geocoding location ${location}:`, error);
+      // Always use exact New York coordinates as fallback if geocoding fails
+      console.log(`Geocoding failed for ${location}, using exact New York City coordinates as fallback`);
+      return { lat: 40.7128, lng: -74.0060 }; // Default to NYC (exact, never random)
+    }
   };
   
   const handleEdit = () => {
@@ -430,7 +454,7 @@ const MissionDetail = () => {
                         <div className="mission-popup-content">
                           <p><strong>Location:</strong> {mission.location}</p>
                           <p><strong>Hero:</strong> {mission.hero}</p>
-                          <p><strong>Threat Level:</strong> {mission.threat}</p>
+                          <p><strong>Threat Level:</strong> {mission.threatLevel}</p>
                         </div>
                       </div>
                     </Popup>
@@ -455,8 +479,8 @@ const MissionDetail = () => {
                 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Threat Level:</span>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${mission.threat === 'Critical' ? 'bg-red-500/20 text-red-300' : mission.threat === 'High' ? 'bg-orange-500/20 text-orange-300' : mission.threat === 'Medium' ? 'bg-yellow-500/20 text-yellow-300' : 'bg-green-500/20 text-green-300'}`}>
-                    {mission.threat}
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${mission.threatLevel === 'Critical' ? 'bg-red-500/20 text-red-300' : mission.threatLevel === 'High' ? 'bg-orange-500/20 text-orange-300' : mission.threatLevel === 'Medium' ? 'bg-yellow-500/20 text-yellow-300' : 'bg-green-500/20 text-green-300'}`}>
+                    {mission.threatLevel}
                   </span>
                 </div>
                 

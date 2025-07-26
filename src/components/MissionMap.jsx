@@ -150,7 +150,14 @@ export default function MissionMap({ missions }) {
     try {
       console.log(`Attempting to geocode location: ${location}`);
       
+      // Ensure the API key is set
+      if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
+        console.warn("No Google Maps API key found. Geocoding may not work properly.");
+      }
+      
       // Set options for the geocoding request
+      setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "");
+      setLanguage("en");
       setRegion("us"); // Default region
       
       // Make the geocoding request
@@ -162,17 +169,15 @@ export default function MissionMap({ missions }) {
         return { lat, lng };
       } else {
         console.warn(`No results found for location: ${location}`);
-        // Generate a random position near NYC as fallback
-        const randomLat = 40.7128 + (Math.random() - 0.5) * 0.2;
-        const randomLng = -74.0060 + (Math.random() - 0.5) * 0.2;
-        return { lat: randomLat, lng: randomLng };
+        // Use exact NYC coordinates as fallback
+        console.log(`Using New York City coordinates as fallback for: ${location}`);
+        return { lat: 40.7128, lng: -74.0060 };
       }
     } catch (error) {
       console.error("Error geocoding location:", location, error);
-      // Generate a random position near NYC as fallback
-      const randomLat = 40.7128 + (Math.random() - 0.5) * 0.2;
-      const randomLng = -74.0060 + (Math.random() - 0.5) * 0.2;
-      return { lat: randomLat, lng: randomLng };
+      // Use exact NYC coordinates as fallback
+      console.log(`Using New York City coordinates as fallback for: ${location}`);
+      return { lat: 40.7128, lng: -74.0060 };
     }
   };
 
@@ -253,12 +258,23 @@ export default function MissionMap({ missions }) {
       'Toronto': { lat: 43.6532, lng: -79.3832 },
       'Seoul': { lat: 37.5665, lng: 126.9780 },
       'Mexico City': { lat: 19.4326, lng: -99.1332 },
+      'San Francisco': { lat: 37.7749, lng: -122.4194 },
+      'Washington DC': { lat: 38.9072, lng: -77.0369 },
+      'Las Vegas': { lat: 36.1699, lng: -115.1398 },
+      'Miami': { lat: 25.7617, lng: -80.1918 },
+      'Seattle': { lat: 47.6062, lng: -122.3321 },
+      'Boston': { lat: 42.3601, lng: -71.0589 },
+      'Atlanta': { lat: 33.7490, lng: -84.3880 },
+      'Dallas': { lat: 32.7767, lng: -96.7970 },
+      'Denver': { lat: 39.7392, lng: -104.9903 },
+      'Phoenix': { lat: 33.4484, lng: -112.0740 },
       
       // Fictional Marvel locations
       'Wakanda': { lat: -1.2921, lng: 36.8219 }, // Using Nairobi, Kenya as a stand-in
       'Sokovia': { lat: 45.8150, lng: 15.9819 }, // Using Zagreb, Croatia as a stand-in
       'Asgard': { lat: 60.3913, lng: 5.3221 }, // Using Bergen, Norway as a stand-in
       'Stark Tower': { lat: 40.7484, lng: -73.9857 }, // Using Empire State Building location
+      'Avengers Tower': { lat: 40.7484, lng: -73.9857 }, // Using Empire State Building location
       'Avengers Compound': { lat: 41.2565, lng: -73.6816 }, // Using location near Westchester, NY
       'Sanctum Sanctorum': { lat: 40.7294, lng: -74.0031 }, // Greenwich Village, NYC
       'Kamar-Taj': { lat: 27.7172, lng: 85.3240 }, // Using Kathmandu, Nepal
@@ -266,6 +282,12 @@ export default function MissionMap({ missions }) {
       'Genosha': { lat: -20.1609, lng: 57.5012 }, // Approximating to Mauritius
       'Madripoor': { lat: 1.3521, lng: 103.8198 }, // Approximating to Singapore
       'Attilan': { lat: 27.9881, lng: 86.9250 }, // Approximating to Himalayas
+      'Xandar': { lat: 51.5074, lng: -0.1278 }, // Using London as a stand-in
+      'Knowhere': { lat: 27.1750, lng: 78.0422 }, // Using Agra, India as a stand-in
+      'Titan': { lat: 36.1699, lng: -115.1398 }, // Using Las Vegas as a stand-in
+      'Vormir': { lat: 63.9850, lng: -22.6050 }, // Using Iceland as a stand-in
+      'Hala': { lat: 25.2048, lng: 55.2708 }, // Using Dubai as a stand-in
+      'Sakaar': { lat: -25.3444, lng: 131.0369 }, // Using Uluru, Australia as a stand-in
     };
 
     // Check if we have a mapping for this location
@@ -284,10 +306,9 @@ export default function MissionMap({ missions }) {
       return result;
     } catch (error) {
       console.error(`Failed to geocode ${location}:`, error);
-      // Return a random location near New York as fallback
-      const randomLat = 40.7128 + (Math.random() - 0.5) * 0.1;
-      const randomLng = -74.0060 + (Math.random() - 0.5) * 0.1;
-      return { lat: randomLat, lng: randomLng };
+      // Return exact NYC coordinates as fallback, not random
+      console.log(`Geocoding failed for ${location}, using New York City as fallback`);
+      return { lat: 40.7128, lng: -74.0060 };
     }
   };
 
@@ -470,6 +491,38 @@ export default function MissionMap({ missions }) {
                   setTimeout(() => {
                     navigate(`/mission/${mission.id}`);
                   }, 1000);
+                },
+                mouseover: (e) => {
+                  // Show custom tooltip on hover with enhanced styling
+                  const marker = e.target;
+                  const tooltipContent = `
+                    <div class="mission-hover-tooltip">
+                      <div class="tooltip-header ${mission.priority?.toLowerCase()}">
+                        <h3>${mission.title}</h3>
+                        <span class="tooltip-priority ${mission.priority?.toLowerCase()}">${mission.priority}</span>
+                      </div>
+                      <div class="tooltip-content">
+                        <p><strong>Location:</strong> ${mission.location}</p>
+                        <p><strong>Hero:</strong> ${mission.hero}</p>
+                        <p><strong>Threat Level:</strong> ${mission.threatLevel}</p>
+                      </div>
+                    </div>
+                  `;
+                  marker.bindTooltip(tooltipContent, {
+                    direction: 'top',
+                    offset: [0, -30],
+                    className: 'mission-tooltip',
+                    opacity: 1.0,
+                    permanent: false,
+                    interactive: true
+                  }).openTooltip();
+                },
+                mouseout: (e) => {
+                  // Close tooltip on mouseout
+                  const marker = e.target;
+                  if (marker._tooltip) {
+                    marker.closeTooltip();
+                  }
                 }
               }}
             >
@@ -484,7 +537,7 @@ export default function MissionMap({ missions }) {
                   <div className="mission-popup-content">
                     <p><strong>Location:</strong> {mission.location}</p>
                     <p><strong>Hero:</strong> {mission.hero}</p>
-                    <p><strong>Threat Level:</strong> {mission.threat}</p>
+                    <p><strong>Threat Level:</strong> {mission.threatLevel}</p>
                     {mission.description && (
                       <div className="mission-description">
                         <p><strong>Details:</strong></p>

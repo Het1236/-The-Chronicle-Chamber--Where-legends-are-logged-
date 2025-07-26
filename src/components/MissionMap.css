@@ -442,3 +442,101 @@
   background-size: 100%;
   opacity: 0.7;
 }
+
+/* Mission tooltip styles */
+.mission-tooltip {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 100, 255, 0.2) !important;
+  padding: 0 !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  min-width: 220px;
+  max-width: 280px;
+  transform: translateY(-5px);
+  transition: all 0.2s ease-in-out;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.mission-tooltip .leaflet-tooltip-content {
+  padding: 0 !important;
+}
+
+.mission-hover-tooltip {
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
+.mission-hover-tooltip .tooltip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px 8px 0 0;
+}
+
+.mission-hover-tooltip .tooltip-header.low {
+  background: linear-gradient(to right, rgba(76, 175, 80, 0.3), rgba(0, 0, 0, 0.2));
+}
+
+.mission-hover-tooltip .tooltip-header.medium {
+  background: linear-gradient(to right, rgba(255, 152, 0, 0.3), rgba(0, 0, 0, 0.2));
+}
+
+.mission-hover-tooltip .tooltip-header.high,
+.mission-hover-tooltip .tooltip-header.critical {
+  background: linear-gradient(to right, rgba(244, 67, 54, 0.3), rgba(0, 0, 0, 0.2));
+}
+
+.mission-hover-tooltip .tooltip-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+}
+
+.mission-hover-tooltip .tooltip-content {
+  padding: 10px 12px;
+  font-size: 0.85rem;
+}
+
+.mission-hover-tooltip .tooltip-content p {
+  margin: 5px 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.mission-hover-tooltip .tooltip-content p strong {
+  color: white;
+}
+
+.mission-hover-tooltip .tooltip-priority {
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.mission-hover-tooltip .tooltip-priority.high,
+.mission-hover-tooltip .tooltip-priority.critical {
+  background-color: rgba(244, 67, 54, 0.3);
+  color: #ff6b6b;
+}
+
+.mission-hover-tooltip .tooltip-priority.medium {
+  background-color: rgba(255, 152, 0, 0.3);
+  color: #ffa94d;
+}
+
+.mission-hover-tooltip .tooltip-priority.low {
+  background-color: rgba(76, 175, 80, 0.3);
+  color: #69db7c;
+}
+
+/* Remove arrow from tooltip */
+.mission-tooltip:before {
+  display: none !important;
+}

@@ -9,6 +9,7 @@ import {
 } from '../services/authService';
 import { animated, useSpring } from '@react-spring/web';
 import { useFadeIn, useScaleIn, useSlideIn } from '../utils/animations';
+import logoImg from '../assets/Logo.png';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -225,14 +226,10 @@ const Auth = () => {
       {/* Particle background */}
       <canvas ref={canvasRef} className="absolute inset-0 z-0"></canvas>
       
-      {/* Shield logo animation */}
+      {/* Logo animation */}
       <animated.div ref={logoRef} style={logoProps} className="absolute top-10 left-1/2 transform -translate-x-1/2 z-10">
-        <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center shadow-lg shadow-red-900/20">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center">
-              <i className="ri-shield-star-line text-white text-2xl"></i>
-            </div>
-          </div>
+        <div className="h-20 flex items-center justify-center transform hover:scale-105 transition-transform">
+          <img src={logoImg} alt="The Chronicle Chamber Logo" className="h-full object-contain" />
         </div>
         <h1 className="text-center text-white text-2xl font-bold mt-4 tracking-wider">
           <span className="bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 text-transparent bg-clip-text font-serif">The Chronicle Chamber</span>

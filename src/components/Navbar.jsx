@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { AvengerContext } from '../context/AvengerContext';
 import { useAuth } from '../context/AuthContext';
 import { logoutUser } from '../services/authService';
+import logoImg from '../assets/Logo.png';
 
 export default function Navbar() {
   const { selectedAvenger } = useContext(AvengerContext);
@@ -22,8 +23,8 @@ export default function Navbar() {
     <header className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700">
       <div className="px-8 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-lg flex items-center justify-center shadow-lg shadow-red-900/20 transform hover:scale-105 transition-transform">
-            <i className="ri-shield-line text-white text-xl"></i>
+          <div className="h-10 flex items-center justify-center transform hover:scale-105 transition-transform">
+            <img src={logoImg} alt="The Chronicle Chamber Logo" className="h-full object-contain" />
           </div>
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold tracking-wide">
