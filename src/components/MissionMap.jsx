@@ -6,14 +6,11 @@ import 'leaflet/dist/leaflet.css';
 import { setKey, setLanguage, setRegion, fromAddress, RequestType } from 'react-geocode';
 import './MissionMap.css'; // Import custom CSS for animations
 
-// Set up Geocode with Google Maps API
-// Note: You'll need to replace this with your actual API key
-// In Vite, environment variables are accessed via import.meta.env instead of process.env
+
 setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "");
 setLanguage("en");
 setRegion("us");
 
-// Fix for Leaflet marker icons in webpack
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({

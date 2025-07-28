@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AvengerContext, AvengerProvider } from './context/AvengerContext';
 import { AuthProvider, AuthContext} from './context/AuthContext';
 import HeroSelection from './pages/HeroSelection';
@@ -11,6 +11,7 @@ import AvengerDetail from './pages/AvengerDetail';
 import MissionDetail from './pages/MissionDetail';
 import Error404 from './pages/Error404';
 import ParticleBackground from './components/ParticleBackground';
+import IntroVideo from './components/IntroVideo';
 import { initializeAvengersInFirestore, migrateLocalStorageToFirestore } from './utils/initializeFirebase';
 
 function PrivateRoute({ children }) {
@@ -57,6 +58,8 @@ function PrivateRoute({ children }) {
 }
 
 function AppContent() {
+  const [showIntro, setShowIntro] = useState(true);
+  
   // Initialize Firebase data and migrate localStorage data
   useEffect(() => {
     const initializeFirebase = async () => {
@@ -72,7 +75,23 @@ function AppContent() {
     };
     
     initializeFirebase();
+    
+    // Check if the intro has been shown before in this session
+    const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
+    if (hasSeenIntro) {
+      setShowIntro(false);
+    }
   }, []);
+
+  const handleVideoEnd = () => {
+    setShowIntro(false);
+    // Save to session storage so it doesn't show again during this session
+    sessionStorage.setItem('hasSeenIntro', 'true');
+  };
+
+  if (showIntro) {
+    return <IntroVideo onVideoEnd={handleVideoEnd} />;
+  }
 
   return (
     <Router>
