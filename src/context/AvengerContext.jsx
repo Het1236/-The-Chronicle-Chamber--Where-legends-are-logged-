@@ -24,27 +24,33 @@ export function AvengerProvider({ children }) {
 
   // Load data from Firebase when user authentication state changes
   useEffect(() => {
-    console.log('AvengerContext: Auth state changed', { currentUser, authLoading });
+    // Remove this console log
+    // console.log('AvengerContext: Auth state changed', { currentUser, authLoading });
     
     const loadData = async () => {
       try {
         setLoading(true);
-        console.log('AvengerContext: Loading data from Firebase');
+        // Remove this console log
+        // console.log('AvengerContext: Loading data from Firebase');
         
         // Only proceed if user is authenticated
         if (currentUser) {
-          console.log('AvengerContext: User is authenticated, loading data');
+          // Remove this console log
+          // console.log('AvengerContext: User is authenticated, loading data');
           // Get selected avenger from Firebase
           const avenger = await getSelectedAvenger();
-          console.log('AvengerContext: Selected avenger loaded', avenger);
+          // Remove this console log
+          // console.log('AvengerContext: Selected avenger loaded', avenger);
           if (avenger) setSelectedAvenger(avenger);
           
           // Get all missions from Firebase
           const missionsList = await getMissions();
-          console.log('AvengerContext: Missions loaded', missionsList.length);
+          // Remove this console log
+          // console.log('AvengerContext: Missions loaded', missionsList.length);
           setMissions(missionsList);
         } else {
-          console.log('AvengerContext: User is not authenticated, resetting state');
+          // Remove this console log
+          // console.log('AvengerContext: User is not authenticated, resetting state');
           // Reset state when user is not authenticated
           setSelectedAvenger(null);
           setMissions([]);

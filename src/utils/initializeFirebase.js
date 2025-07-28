@@ -155,16 +155,16 @@ export const initializeAvengersInFirestore = async () => {
     // Check if avengers collection already has data
     const querySnapshot = await getDocs(collection(db, 'avengers'));
     if (querySnapshot.size > 0) {
-      console.log('Avengers collection already initialized');
+      // console.log('Avengers collection already initialized');
       return;
     }
 
     // If no data exists, add the avengers
-    console.log('Initializing Avengers collection...');
+    // console.log('Initializing Avengers collection...');
     for (const avenger of avengers) {
       await setDoc(doc(db, 'avengers', avenger.id), avenger);
     }
-    console.log('Avengers collection initialized successfully');
+    // console.log('Avengers collection initialized successfully');
   } catch (error) {
     console.error('Error initializing Avengers collection:', error);
   }
@@ -202,7 +202,7 @@ export const migrateLocalStorageToFirestore = async () => {
       const avenger = JSON.parse(storedAvenger);
       // Update the user's document with the selected avenger
       await updateDoc(userRef, { selectedAvenger: avenger });
-      console.log('Migrated selected avenger to Firestore for user:', user.uid);
+      // console.log('Migrated selected avenger to Firestore for user:', user.uid);
     }
 
     // Migrate missions if exist
@@ -217,13 +217,13 @@ export const migrateLocalStorageToFirestore = async () => {
           uid: user.uid // Associate with the current user
         });
       }
-      console.log(`Migrated ${JSON.parse(storedMissions).length} missions to Firestore for user:`, user.uid);
+      // console.log(`Migrated ${JSON.parse(storedMissions).length} missions to Firestore for user:`, user.uid);
     }
 
     // Clear localStorage after successful migration
     localStorage.removeItem('selectedAvenger');
     localStorage.removeItem('missions');
-    console.log('Cleared localStorage after migration');
+    // console.log('Cleared localStorage after migration');
 
     return true;
   } catch (error) {

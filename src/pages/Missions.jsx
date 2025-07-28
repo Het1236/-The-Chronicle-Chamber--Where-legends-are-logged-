@@ -194,7 +194,7 @@ export default function Missions() {
                         >
                           <option value="All">All Difficulties</option>
                           <option value="Low">Easy Only</option>
-                          <option value="Medium">Advanced Only</option>
+                          <option value="Medium">Medium Only</option>
                           <option value="High">Expert Only</option>
                         </select>
                       </div>

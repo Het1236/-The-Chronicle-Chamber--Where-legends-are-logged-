@@ -21,7 +21,7 @@ const IntroVideo = ({ onVideoEnd }) => {
         className="w-full h-full object-cover"
         src={introVideo}
         autoPlay
-        muted={false}
+        muted={true} // Change to muted={true} for better user experience
         playsInline
         onEnded={handleVideoEnd}
       />

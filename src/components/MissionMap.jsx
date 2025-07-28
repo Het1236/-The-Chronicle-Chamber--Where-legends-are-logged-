@@ -96,7 +96,7 @@ function MapController({ selectedMission, setSelectedMission, coordinates }) {
   // Effect to handle map zoom when a mission is selected
   useEffect(() => {
     if (selectedMission && selectedMission.coordinates) {
-      console.log('Flying to selected mission:', selectedMission);
+      // console.log('Flying to selected mission:', selectedMission);
       // Fly to the selected mission location with animation
       map.flyTo(
         [selectedMission.coordinates.lat, selectedMission.coordinates.lng],
@@ -116,7 +116,7 @@ function MapController({ selectedMission, setSelectedMission, coordinates }) {
       const lngs = Object.values(coordinates).map(coord => coord.lng);
       
       if (lats.length > 0 && lngs.length > 0) {
-        console.log('Fitting map to bounds of all missions');
+        // console.log('Fitting map to bounds of all missions');
         const bounds = [
           [Math.min(...lats) - 0.5, Math.min(...lngs) - 0.5],
           [Math.max(...lats) + 0.5, Math.max(...lngs) + 0.5]
@@ -140,12 +140,12 @@ export default function MissionMap({ missions }) {
   // Function to geocode a location string to coordinates using Google Maps API
   const geocodeLocation = async (location) => {
     if (!location || typeof location !== 'string' || location.trim() === '') {
-      console.error("Invalid location provided to geocodeLocation:", location);
+      // console.error("Invalid location provided to geocodeLocation:", location);
       return { lat: 40.7128, lng: -74.0060 }; // Default to NYC
     }
     
     try {
-      console.log(`Attempting to geocode location: ${location}`);
+      // console.log(`Attempting to geocode location: ${location}`);
       
       // Ensure the API key is set
       if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
@@ -162,18 +162,18 @@ export default function MissionMap({ missions }) {
       
       if (response.results && response.results.length > 0) {
         const { lat, lng } = response.results[0].geometry.location;
-        console.log(`Successfully geocoded ${location} to:`, { lat, lng });
+        // console.log(`Successfully geocoded ${location} to:`, { lat, lng });
         return { lat, lng };
       } else {
         console.warn(`No results found for location: ${location}`);
         // Use exact NYC coordinates as fallback
-        console.log(`Using New York City coordinates as fallback for: ${location}`);
+        // console.log(`Using New York City coordinates as fallback for: ${location}`);
         return { lat: 40.7128, lng: -74.0060 };
       }
     } catch (error) {
       console.error("Error geocoding location:", location, error);
       // Use exact NYC coordinates as fallback
-      console.log(`Using New York City coordinates as fallback for: ${location}`);
+      // console.log(`Using New York City coordinates as fallback for: ${location}`);
       return { lat: 40.7128, lng: -74.0060 };
     }
   };
@@ -181,7 +181,7 @@ export default function MissionMap({ missions }) {
   // Effect to geocode mission locations
   useEffect(() => {
     const fetchCoordinates = async () => {
-      console.log('Fetching coordinates for missions:', missions.length);
+      // console.log('Fetching coordinates for missions:', missions.length);
       const newCoordinates = { ...coordinates };
       let hasNewCoordinates = false;
 
@@ -189,7 +189,7 @@ export default function MissionMap({ missions }) {
       for (const mission of missions) {
         if (mission.location) {
           try {
-            console.log(`Processing mission ${mission.id}: ${mission.title} at ${mission.location}`);
+            // console.log(`Processing mission ${mission.id}: ${mission.title} at ${mission.location}`);
             // For demo purposes, we'll use a mapping of fictional locations
             // In production, you would use the geocodeLocation function
             const coords = await getCoordinatesForLocation(mission.location);
@@ -198,7 +198,7 @@ export default function MissionMap({ missions }) {
             if (!coordinates[mission.id] || 
                 coordinates[mission.id].lat !== coords.lat || 
                 coordinates[mission.id].lng !== coords.lng) {
-              console.log(`Updating coordinates for mission ${mission.id}:`, coords);
+              // console.log(`Updating coordinates for mission ${mission.id}:`, coords);
               newCoordinates[mission.id] = coords;
               hasNewCoordinates = true;
             }
@@ -206,15 +206,15 @@ export default function MissionMap({ missions }) {
             console.error(`Error geocoding ${mission.location}:`, error);
           }
         } else {
-          console.log(`Mission ${mission.id} has no location`);
+          // console.log(`Mission ${mission.id} has no location`);
         }
       }
 
       if (hasNewCoordinates) {
         setCoordinates(newCoordinates);
-        console.log('Updated coordinates:', newCoordinates);
+        // console.log('Updated coordinates:', newCoordinates);
       } else {
-        console.log('No coordinate updates needed');
+        // console.log('No coordinate updates needed');
       }
     };
 
@@ -290,21 +290,21 @@ export default function MissionMap({ missions }) {
     // Check if we have a mapping for this location
     for (const [key, value] of Object.entries(locationMap)) {
       if (location.toLowerCase().includes(key.toLowerCase())) {
-        console.log(`Found predefined coordinates for ${location}:`, value);
+        // console.log(`Found predefined coordinates for ${location}:`, value);
         return value;
       }
     }
 
     // If no match found, try to geocode it
-    console.log(`No predefined coordinates for ${location}, attempting to geocode...`);
+    // console.log(`No predefined coordinates for ${location}, attempting to geocode...`);
     try {
       const result = await geocodeLocation(location);
-      console.log(`Successfully geocoded ${location} to:`, result);
+      // console.log(`Successfully geocoded ${location} to:`, result);
       return result;
     } catch (error) {
       console.error(`Failed to geocode ${location}:`, error);
       // Return exact NYC coordinates as fallback, not random
-      console.log(`Geocoding failed for ${location}, using New York City as fallback`);
+      // console.log(`Geocoding failed for ${location}, using New York City as fallback`);
       return { lat: 40.7128, lng: -74.0060 };
     }
   };
@@ -319,7 +319,7 @@ export default function MissionMap({ missions }) {
     // Set the selected mission
     setSelectedMission(mission);
     
-    console.log('Triggering animation for mission:', mission.title);
+    // console.log('Triggering animation for mission:', mission.title);
     
     // Choose an animation effect based on hero or mission priority/threat level
     let effect = 'ironman'; // Default effect
@@ -347,7 +347,7 @@ export default function MissionMap({ missions }) {
       effect = 'drstrange'; // Dr. Strange effect for medium-threat missions
     }
     
-    console.log('Selected animation type:', effect);
+    // console.log('Selected animation type:', effect);
     setAnimationEffect(effect);
     
     // If we have a map reference, zoom to the location
@@ -395,10 +395,10 @@ export default function MissionMap({ missions }) {
   
   // Log mission data for debugging
   useEffect(() => {
-    console.log('Missions data:', missions);
-    console.log('Coordinates data:', coordinates);
-    console.log('Number of missions:', missions.length);
-    console.log('Number of coordinates:', Object.keys(coordinates).length);
+    // console.log('Missions data:', missions);
+    // console.log('Coordinates data:', coordinates);
+    // console.log('Number of missions:', missions.length);
+    // console.log('Number of coordinates:', Object.keys(coordinates).length);
   }, [missions, coordinates]);
 
   return (
@@ -460,17 +460,17 @@ export default function MissionMap({ missions }) {
           
           // Skip missions without coordinates or location
           if (!missionCoords && !mission.location) {
-            console.log(`Mission ${mission.id} has no coordinates or location`);
+            // console.log(`Mission ${mission.id} has no coordinates or location`);
             return null;
           }
           
           // If we don't have coordinates yet but have a location, show a placeholder
           if (!missionCoords && mission.location) {
-            console.log(`Mission ${mission.id} has location but no coordinates yet`);
+            // console.log(`Mission ${mission.id} has location but no coordinates yet`);
             return null; // Skip for now until coordinates are loaded
           }
           
-          console.log(`Rendering marker for mission ${mission.id} at:`, missionCoords);
+          // console.log(`Rendering marker for mission ${mission.id} at:`, missionCoords);
           
           return (
             <Marker
@@ -479,7 +479,7 @@ export default function MissionMap({ missions }) {
               icon={createAvengerIcon(mission.priority, mission.hero)}
               eventHandlers={{
                 click: () => {
-                  console.log(`Clicked on mission: ${mission.title}`);
+                  // console.log(`Clicked on mission: ${mission.title}`);
                   triggerAnimationEffect({
                     ...mission,
                     coordinates: missionCoords
@@ -501,7 +501,7 @@ export default function MissionMap({ missions }) {
                       <div class="tooltip-content">
                         <p><strong>Location:</strong> ${mission.location}</p>
                         <p><strong>Hero:</strong> ${mission.hero}</p>
-                        <p><strong>Threat Level:</strong> ${mission.threatLevel}</p>
+                        <p><strong>Threat Level:</strong> ${mission.threat}</p>
                       </div>
                     </div>
                   `;
@@ -534,7 +534,7 @@ export default function MissionMap({ missions }) {
                   <div className="mission-popup-content">
                     <p><strong>Location:</strong> {mission.location}</p>
                     <p><strong>Hero:</strong> {mission.hero}</p>
-                    <p><strong>Threat Level:</strong> {mission.threatLevel}</p>
+                    <p><strong>Threat Level:</strong> {mission.threat}</p>
                     {mission.description && (
                       <div className="mission-description">
                         <p><strong>Details:</strong></p>

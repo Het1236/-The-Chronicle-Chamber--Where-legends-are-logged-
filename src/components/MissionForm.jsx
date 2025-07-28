@@ -58,7 +58,7 @@ export default function MissionForm() {
     
     try {
       if (editingMission) {
-        console.log("Updating mission:", formData);
+        // console.log("Updating mission:", formData);
         // Make sure we preserve the ID when updating
         const updatedMission = {
           ...formData,
@@ -70,9 +70,9 @@ export default function MissionForm() {
         
         // Call the update function
         await updateMission(updatedMission);
-        console.log("Mission updated successfully");
+        // console.log("Mission updated successfully");
       } else {
-        console.log("Adding new mission");
+        // console.log("Adding new mission");
         // Add a new mission
         await addMission({
           ...formData,
@@ -81,7 +81,7 @@ export default function MissionForm() {
           heroImage: selectedAvenger.image3,
           timestamp: new Date().toISOString(),
         });
-        console.log("Mission added successfully");
+        // console.log("Mission added successfully");
       }
       
       // Reset the form

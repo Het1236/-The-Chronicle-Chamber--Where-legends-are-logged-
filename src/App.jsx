@@ -23,14 +23,15 @@ function PrivateRoute({ children }) {
   const currentUser = authContext?.currentUser;
   const authLoading = authContext?.loading || false;
   
-  console.log('PrivateRoute:', { 
-    authContext: !!authContext,
-    currentUser: !!currentUser, 
-    authLoading, 
-    avengerContext: !!avengerContext,
-    selectedAvenger: !!selectedAvenger, 
-    avengerLoading 
-  });
+  // Remove these console logs
+  // console.log('PrivateRoute:', { 
+  //   authContext: !!authContext,
+  //   currentUser: !!currentUser, 
+  //   authLoading, 
+  //   avengerContext: !!avengerContext,
+  //   selectedAvenger: !!selectedAvenger, 
+  //   avengerLoading 
+  // });
   
   if (authLoading || avengerLoading) {
     return (
@@ -45,12 +46,14 @@ function PrivateRoute({ children }) {
   }
   
   if (!currentUser) {
-    console.log('PrivateRoute: No user, redirecting to login');
+    // Remove this console log
+    // console.log('PrivateRoute: No user, redirecting to login');
     return <Navigate to="/login" />;
   }
   
   if (!selectedAvenger && window.location.pathname !== '/heroes') {
-    console.log('PrivateRoute: No selected avenger, redirecting to hero selection');
+    // Remove this console log
+    // console.log('PrivateRoute: No selected avenger, redirecting to hero selection');
     return <Navigate to="/heroes" />;
   }
   
@@ -59,16 +62,20 @@ function PrivateRoute({ children }) {
 
 function AppContent() {
   const [showIntro, setShowIntro] = useState(true);
+  const { currentUser } = useContext(AuthContext);
   
   // Initialize Firebase data and migrate localStorage data
   useEffect(() => {
     const initializeFirebase = async () => {
       try {
-        // Initialize avengers collection in Firestore
-        await initializeAvengersInFirestore();
-        
-        // Migrate existing localStorage data to Firestore
-        await migrateLocalStorageToFirestore();
+        // Only initialize if user is authenticated
+        if (currentUser) {
+          // Initialize avengers collection in Firestore
+          await initializeAvengersInFirestore();
+          
+          // Migrate existing localStorage data to Firestore
+          await migrateLocalStorageToFirestore();
+        }
       } catch (error) {
         console.error('Error initializing Firebase:', error);
       }
@@ -81,7 +88,7 @@ function AppContent() {
     if (hasSeenIntro) {
       setShowIntro(false);
     }
-  }, []);
+  }, [currentUser]); // Add currentUser as dependency
 
   const handleVideoEnd = () => {
     setShowIntro(false);

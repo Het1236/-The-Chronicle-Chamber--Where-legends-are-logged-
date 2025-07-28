@@ -10,7 +10,7 @@ export default function MissionCard({ mission }) {
     e.stopPropagation(); // Prevent event bubbling
     e.preventDefault(); // Prevent default behavior
     
-    console.log("Editing mission:", mission);
+    // console.log("Editing mission:", mission);
     setEditingMission(mission);
     
     // Scroll to the form
@@ -24,19 +24,19 @@ export default function MissionCard({ mission }) {
     e.stopPropagation(); // Prevent event bubbling
     e.preventDefault(); // Prevent default behavior
     
-    console.log("Attempting to delete mission:", mission);
+    // console.log("Attempting to delete mission:", mission);
     
     if (window.confirm("Are you sure you want to delete this mission?")) {
       try {
-        console.log("Confirmed deletion for mission ID:", mission.id);
+        // console.log("Confirmed deletion for mission ID:", mission.id);
         await deleteMission(mission.id);
-        console.log("Mission deleted successfully");
+        // console.log("Mission deleted successfully");
       } catch (error) {
         console.error("Error deleting mission:", error);
         alert("There was an error deleting the mission. Please try again.");
       }
     } else {
-      console.log("Mission deletion cancelled");
+      // console.log("Mission deletion cancelled");
     }
   };
 

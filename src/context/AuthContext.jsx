@@ -14,9 +14,11 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('Setting up auth state listener');
+    // Remove this console log
+    // console.log('Setting up auth state listener');
     const unsubscribe = onAuthStateChange(async (user) => {
-      console.log('Auth state changed:', user ? `User: ${user.uid}` : 'No user');
+      // Remove this console log
+      // console.log('Auth state changed:', user ? `User: ${user.uid}` : 'No user');
       setCurrentUser(user);
       
       if (user) {
@@ -24,7 +26,8 @@ export function AuthProvider({ children }) {
           // Get additional user data from Firestore
           const { userData, error } = await getUserData(user.uid);
           if (!error) {
-            console.log('User data loaded:', userData);
+            // Remove this console log
+            // console.log('User data loaded:', userData);
             setUserData(userData);
           } else {
             console.error('Error loading user data:', error);
@@ -42,11 +45,13 @@ export function AuthProvider({ children }) {
     // Initialize with current user if already logged in
     const currentAuthUser = auth.currentUser;
     if (currentAuthUser) {
-      console.log('Current user already available:', currentAuthUser.uid);
+      // Remove this console log
+      // console.log('Current user already available:', currentAuthUser.uid);
       setCurrentUser(currentAuthUser);
       getUserData(currentAuthUser.uid).then(({ userData, error }) => {
         if (!error) {
-          console.log('Initial user data loaded:', userData);
+          // Remove this console log
+          // console.log('Initial user data loaded:', userData);
           setUserData(userData);
         }
         setLoading(false);

@@ -96,7 +96,7 @@ export default function Home() {
         className="max-w-7xl mx-auto px-8 py-8"
       >
         <MissionForm />
-           <div className="text-center mb-12 my-5"><h2 className="text-3xl font-bold text-white mb-4">Mission History</h2><p class="text-gray-300">Your missions as {selectedAvenger.name}</p></div>
+           <div className="text-center mb-12 my-5"><h2 className="text-3xl font-bold text-white mb-4">Mission History</h2><p className="text-gray-300">Your missions as {selectedAvenger.name}</p></div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
           {heroMissions.map((mission, index) => (
             <animated.div

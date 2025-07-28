@@ -157,7 +157,7 @@ const MissionDetail = () => {
     // Check if we have a mapping for fictional Marvel locations
     for (const [key, value] of Object.entries(locationMap)) {
       if (location.toLowerCase().includes(key.toLowerCase())) {
-        console.log(`Found predefined coordinates for fictional location ${location}:`, value);
+        // console.log(`Found predefined coordinates for fictional location ${location}:`, value);
         return value;
       }
     }
@@ -167,7 +167,7 @@ const MissionDetail = () => {
       // Check if we can find this mission in the context
       const missionInContext = missions.find(m => m.id === id);
       if (missionInContext && missionInContext.coordinates) {
-        console.log(`Using stored coordinates for ${location}:`, missionInContext.coordinates);
+        // console.log(`Using stored coordinates for ${location}:`, missionInContext.coordinates);
         return missionInContext.coordinates;
       }
     } catch (error) {
@@ -175,7 +175,7 @@ const MissionDetail = () => {
     }
 
     // If no match found in fictional locations or stored coordinates, geocode it using the react-geocode library
-    console.log(`Attempting to geocode real-world location: ${location}`);
+    // console.log(`Attempting to geocode real-world location: ${location}`);
     try {
       // Import the geocoding functions from react-geocode
       const { fromAddress, setKey, setLanguage, setRegion } = await import('react-geocode');
@@ -195,7 +195,7 @@ const MissionDetail = () => {
       
       if (response.results && response.results.length > 0) {
         const { lat, lng } = response.results[0].geometry.location;
-        console.log(`Successfully geocoded ${location} to:`, { lat, lng });
+        // console.log(`Successfully geocoded ${location} to:`, { lat, lng });
         return { lat, lng };
       } else {
         console.warn(`No geocoding results found for location: ${location}`);
@@ -205,7 +205,7 @@ const MissionDetail = () => {
     } catch (error) {
       console.error(`Error geocoding location ${location}:`, error);
       // Always use exact New York coordinates as fallback if geocoding fails
-      console.log(`Geocoding failed for ${location}, using exact New York City coordinates as fallback`);
+      // console.log(`Geocoding failed for ${location}, using exact New York City coordinates as fallback`);
       return { lat: 40.7128, lng: -74.0060 }; // Default to NYC (exact, never random)
     }
   };
@@ -367,7 +367,7 @@ const MissionDetail = () => {
                     </p>
                   </div>
                   
-                  {mission.duration && (
+                  {/* {mission.duration && (
                     <div>
                       <h3 className="text-gray-400 text-sm">Duration</h3>
                       <p className="text-white font-medium flex items-center gap-2">
@@ -375,7 +375,7 @@ const MissionDetail = () => {
                         {mission.duration}
                       </p>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
               
@@ -454,7 +454,7 @@ const MissionDetail = () => {
                         <div className="mission-popup-content">
                           <p><strong>Location:</strong> {mission.location}</p>
                           <p><strong>Hero:</strong> {mission.hero}</p>
-                          <p><strong>Threat Level:</strong> {mission.threatLevel}</p>
+                          <p><strong>Threat Level:</strong> {mission.threat}</p>
                         </div>
                       </div>
                     </Popup>
@@ -479,8 +479,8 @@ const MissionDetail = () => {
                 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Threat Level:</span>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${mission.threatLevel === 'Critical' ? 'bg-red-500/20 text-red-300' : mission.threatLevel === 'High' ? 'bg-orange-500/20 text-orange-300' : mission.threatLevel === 'Medium' ? 'bg-yellow-500/20 text-yellow-300' : 'bg-green-500/20 text-green-300'}`}>
-                    {mission.threatLevel}
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${mission.threat === 'Critical' ? 'bg-red-500/20 text-red-300' : mission.threat === 'High' ? 'bg-orange-500/20 text-orange-300' : mission.threat === 'Medium' ? 'bg-yellow-500/20 text-yellow-300' : 'bg-green-500/20 text-green-300'}`}>
+                    {mission.threat}
                   </span>
                 </div>
                 

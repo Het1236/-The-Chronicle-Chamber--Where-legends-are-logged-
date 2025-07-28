@@ -45,7 +45,7 @@ export default function HeroSelection() {
           setAvengers(avengersList);
         } else {
           // Fallback to hardcoded avengers if Firebase fetch fails
-          console.log('No avengers found in Firestore, using fallback data');
+          // console.log('No avengers found in Firestore, using fallback data');
           setAvengers(fallbackAvengers);
         }
       } catch (error) {
@@ -219,7 +219,7 @@ export default function HeroSelection() {
   });
 
   const handleHeroSelect = async (hero) => {
-    console.log('Selecting hero:', hero.name);
+    // console.log('Selecting hero:', hero.name);
     
     try {
       // First select the avenger in context
@@ -227,14 +227,14 @@ export default function HeroSelection() {
       
       // If user is authenticated, update their selected heroes in Firebase
       if (currentUser && currentUser.uid) {
-        console.log('Updating user selected heroes for:', currentUser.uid);
+        // console.log('Updating user selected heroes for:', currentUser.uid);
         await updateUserSelectedHeroes(currentUser.uid, hero);
       } else {
         console.warn('Cannot update user selected heroes: No authenticated user');
       }
       
       // Navigate to home page
-      console.log('Navigating to home page');
+      // console.log('Navigating to home page');
       navigate("/");
     } catch (error) {
       console.error("Error in hero selection process:", error);
