@@ -12,7 +12,7 @@ import MissionDetail from './pages/MissionDetail';
 import Error404 from './pages/Error404';
 import ParticleBackground from './components/ParticleBackground';
 import IntroVideo from './components/IntroVideo';
-import { initializeAvengersInFirestore, migrateLocalStorageToFirestore } from './utils/initializeFirebase';
+import { initializeAvengersInFirestore } from './utils/initializeFirebase';
 
 function PrivateRoute({ children }) {
   const avengerContext = useContext(AvengerContext);
@@ -74,7 +74,7 @@ function AppContent() {
           await initializeAvengersInFirestore();
           
           // Migrate existing localStorage data to Firestore
-          await migrateLocalStorageToFirestore();
+          // await migrateLocalStorageToFirestore();
         }
       } catch (error) {
         console.error('Error initializing Firebase:', error);

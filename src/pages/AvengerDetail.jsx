@@ -26,7 +26,7 @@ const AvengerDetail = () => {
   // Typing effect for quote
   const { typedText: quote, isComplete: quoteComplete } = useTypingEffect(
     avenger?.quote || "", 
-    1000, 
+    100, 
     20
   );
   

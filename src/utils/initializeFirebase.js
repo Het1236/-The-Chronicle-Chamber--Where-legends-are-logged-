@@ -7,9 +7,9 @@ const avengers = [
     id: "spiderman",
     name: "Spider-Man",
     alias: "Peter Parker",
-    image1: "/src/assets/Spidy3.jpeg",
-    image2: "/src/assets/Spidy4.jpg",
-    image3: "/src/assets/Spidy2.jpg",
+    image1: "/images/Spidy3.jpeg",
+    image2: "/images/Spidy4.jpg",
+    image3: "/images/Spidy2.jpg",
     quote: "With great power comes great responsibility.",
     basicInfo: {
       realName: "Peter Parker",
@@ -35,9 +35,9 @@ const avengers = [
     id: "ironman",
     name: "Iron Man",
     alias: "Tony Stark",
-    image1: "/src/assets/IronMan2.jpg",
-    image2: "/src/assets/IronMan6.jpg",
-    image3: "/src/assets/IronMan3.jpg",
+    image1: "/images/IronMan2.jpg",
+    image2: "/images/IronMan6.jpg",
+    image3: "/images/IronMan3.jpg",
     quote: "I am Iron Man.",
     basicInfo: {
       realName: "Tony Stark",
@@ -67,9 +67,9 @@ const avengers = [
     id: "thor",
     name: "Thor",
     alias: "God of Thunder",
-    image1: "/src/assets/Thor3.jpg",
-    image2: "/src/assets/Thor4.jpg",
-    image3: "/src/assets/Thor2.jpg",
+    image1: "/images/Thor3.jpg",
+    image2: "/images/Thor4.jpg",
+    image3: "/images/Thor2.jpg",
     quote: "I am Thor, God of Thunder!",
     basicInfo: {
       realName: "Thor Odinson",
@@ -95,9 +95,9 @@ const avengers = [
     id: "doctorstrange",
     name: "Doctor Strange",
     alias: "Stephen Strange",
-    image1: "/src/assets/DrStrange2.jpg",
-    image2: "/src/assets/DrStrange4.jpg",
-    image3: "/src/assets/DrStrange3.jpg",
+    image1: "/images/DrStrange2.jpg",
+    image2: "/images/DrStrange4.jpg",
+    image3: "/images/DrStrange3.jpg",
     quote: "The bill comes due. Always.",
     basicInfo: {
       realName: "Stephen Strange",
@@ -123,9 +123,9 @@ const avengers = [
     id: "scarletwitch",
     name: "Scarlet Witch",
     alias: "Wanda Maximoff",
-    image1: "/src/assets/Wanda3.jpg",
-    image2: "/src/assets/Wanda4.jpg",
-    image3: "/src/assets/Wanda2.jpg",
+    image1: "/images/Wanda3.jpg",
+    image2: "/images/Wanda4.jpg",
+    image3: "/images/Wanda2.jpg",
     quote: "You took everything from me.",
     basicInfo: {
       realName: "Wanda Maximoff",
@@ -171,63 +171,63 @@ export const initializeAvengersInFirestore = async () => {
 };
 
 // Function to migrate existing localStorage data to Firestore
-export const migrateLocalStorageToFirestore = async () => {
-  try {
-    // Check if we have data in localStorage
-    const storedAvenger = localStorage.getItem('selectedAvenger');
-    const storedMissions = localStorage.getItem('missions');
+// export const migrateLocalStorageToFirestore = async () => {
+//   try {
+//     // Check if we have data in localStorage
+//     const storedAvenger = localStorage.getItem('selectedAvenger');
+//     const storedMissions = localStorage.getItem('missions');
     
-    // Get the current user
-    const user = auth.currentUser;
-    if (!user) {
-      console.error('No authenticated user found, cannot migrate data');
-      return false;
-    }
+//     // Get the current user
+//     const user = auth.currentUser;
+//     if (!user) {
+//       console.error('No authenticated user found, cannot migrate data');
+//       return false;
+//     }
     
-    // Create or update the user document
-    const userRef = doc(db, 'users', user.uid);
-    const userSnap = await getDoc(userRef);
+//     // Create or update the user document
+//     const userRef = doc(db, 'users', user.uid);
+//     const userSnap = await getDoc(userRef);
     
-    if (!userSnap.exists()) {
-      // Create new user document if it doesn't exist
-      await setDoc(userRef, {
-        email: user.email,
-        displayName: user.displayName,
-        createdAt: new Date()
-      });
-    }
+//     if (!userSnap.exists()) {
+//       // Create new user document if it doesn't exist
+//       await setDoc(userRef, {
+//         email: user.email,
+//         displayName: user.displayName,
+//         createdAt: new Date()
+//       });
+//     }
 
-    // Migrate selected avenger if exists
-    if (storedAvenger) {
-      const avenger = JSON.parse(storedAvenger);
-      // Update the user's document with the selected avenger
-      await updateDoc(userRef, { selectedAvenger: avenger });
-      // console.log('Migrated selected avenger to Firestore for user:', user.uid);
-    }
+//     // Migrate selected avenger if exists
+//     if (storedAvenger) {
+//       const avenger = JSON.parse(storedAvenger);
+//       // Update the user's document with the selected avenger
+//       await updateDoc(userRef, { selectedAvenger: avenger });
+//       // console.log('Migrated selected avenger to Firestore for user:', user.uid);
+//     }
 
-    // Migrate missions if exist
-    if (storedMissions) {
-      const missions = JSON.parse(storedMissions);
-      for (const mission of missions) {
-        // Create a new document with auto-generated ID
-        const missionRef = doc(collection(db, 'missions'));
-        await setDoc(missionRef, {
-          ...mission,
-          id: missionRef.id, // Override the local ID with Firestore ID
-          uid: user.uid // Associate with the current user
-        });
-      }
-      // console.log(`Migrated ${JSON.parse(storedMissions).length} missions to Firestore for user:`, user.uid);
-    }
+//     // Migrate missions if exist
+//     if (storedMissions) {
+//       const missions = JSON.parse(storedMissions);
+//       for (const mission of missions) {
+//         // Create a new document with auto-generated ID
+//         const missionRef = doc(collection(db, 'missions'));
+//         await setDoc(missionRef, {
+//           ...mission,
+//           id: missionRef.id, // Override the local ID with Firestore ID
+//           uid: user.uid // Associate with the current user
+//         });
+//       }
+//       // console.log(`Migrated ${JSON.parse(storedMissions).length} missions to Firestore for user:`, user.uid);
+//     }
 
-    // Clear localStorage after successful migration
-    localStorage.removeItem('selectedAvenger');
-    localStorage.removeItem('missions');
-    // console.log('Cleared localStorage after migration');
+//     // Clear localStorage after successful migration
+//     localStorage.removeItem('selectedAvenger');
+//     localStorage.removeItem('missions');
+//     // console.log('Cleared localStorage after migration');
 
-    return true;
-  } catch (error) {
-    console.error('Error migrating localStorage to Firestore:', error);
-    return false;
-  }
-};
+//     return true;
+//   } catch (error) {
+//     console.error('Error migrating localStorage to Firestore:', error);
+//     return false;
+//   }
+// };

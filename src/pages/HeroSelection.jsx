@@ -9,21 +9,21 @@ import { animated, useSpring } from "@react-spring/web";
 import { useFadeIn, useScaleIn, useSlideIn } from "../utils/animations";
 import ParticleBackground from "../components/ParticleBackground";
 import avengerImg from "../assets/Avengers.jpg";
-import spidermanImg from "../assets/Spidy3.jpeg";
-import spidermanImg2 from "../assets/Spidy4.jpg";
-import spidermanImg3 from "../assets/Spidy2.jpg";
-import thorImg from "../assets/Thor3.jpg";
-import thorImg2 from "../assets/Thor4.jpg";
-import thorImg3 from "../assets/Thor2.jpg";
-import drStrangeImg from "../assets/DrStrange2.jpg";
-import drStrangeImg2 from "../assets/DrStrange4.jpg";
-import drStrangeImg3 from "../assets/DrStrange3.jpg";
-import wandImg from "../assets/Wanda3.jpg";
-import wandImg2 from "../assets/Wanda4.jpg";
-import wandImg3 from "../assets/Wanda2.jpg";
-import ironManImg3 from "../assets/IronMan3.jpg";
-import ironManImg2 from "../assets/IronMan6.jpg";
-import ironManImg from "../assets/IronMan2.jpg";
+// import spidermanImg from "../assets/Spidy3.jpeg";
+// import spidermanImg2 from "../assets/Spidy4.jpg";
+// import spidermanImg3 from "../assets/Spidy2.jpg";
+// import thorImg from "../assets/Thor3.jpg";
+// import thorImg2 from "../assets/Thor4.jpg";
+// import thorImg3 from "../assets/Thor2.jpg";
+// import drStrangeImg from "../assets/DrStrange2.jpg";
+// import drStrangeImg2 from "../assets/DrStrange4.jpg";
+// import drStrangeImg3 from "../assets/DrStrange3.jpg";
+// import wandImg from "../assets/Wanda3.jpg";
+// import wandImg2 from "../assets/Wanda4.jpg";
+// import wandImg3 from "../assets/Wanda2.jpg";
+// import ironManImg3 from "../assets/IronMan3.jpg";
+// import ironManImg2 from "../assets/IronMan6.jpg";
+// import ironManImg from "../assets/IronMan2.jpg";
 import Navbar from "../components/Navbar";
 import { useTrail, useSprings, config } from "@react-spring/web";
 
@@ -49,13 +49,13 @@ export default function HeroSelection() {
           setAvengers(fallbackAvengers);
         }
       } catch (error) {
-        console.error('Error fetching avengers:', error);
+        console.error("Error fetching avengers:", error);
         setAvengers(fallbackAvengers);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchAvengers();
   }, []);
 
@@ -70,9 +70,9 @@ export default function HeroSelection() {
       id: "spiderman",
       name: "Spider-Man",
       alias: "Peter Parker",
-      image1: `${spidermanImg}`,
-      image2: `${spidermanImg2}`,
-      image3: `${spidermanImg3}`,
+      image1: "/images/Spidy3.jpeg",
+      image2: "/images/Spidy4.jpg",
+      image3: "/images/Spidy2.jpg",
       quote: "With great power comes great responsibility.",
       basicInfo: {
         realName: "Peter Parker",
@@ -98,9 +98,9 @@ export default function HeroSelection() {
       id: "ironman",
       name: "Iron Man",
       alias: "Tony Stark",
-      image1: `${ironManImg}`,
-      image2: `${ironManImg2}`,
-      image3: `${ironManImg3}`,
+      image1: "/images/IronMan2.jpg",
+      image2: "/images/IronMan6.jpg",
+      image3: "/images/IronMan3.jpg",
       quote: "I am Iron Man.",
       basicInfo: {
         realName: "Tony Stark",
@@ -130,9 +130,9 @@ export default function HeroSelection() {
       id: "thor",
       name: "Thor",
       alias: "God of Thunder",
-      image1: `${thorImg}`,
-      image2: `${thorImg2}`,
-      image3: `${thorImg3}`,
+      image1: "/images/Thor3.jpg",
+      image2: "/images/Thor4.jpg",
+      image3: "/images/Thor2.jpg",
       quote: "I am Thor, God of Thunder!",
       basicInfo: {
         realName: "Thor Odinson",
@@ -158,9 +158,9 @@ export default function HeroSelection() {
       id: "doctorstrange",
       name: "Doctor Strange",
       alias: "Stephen Strange",
-      image1: `${drStrangeImg}`,
-      image2: `${drStrangeImg2}`,
-      image3: `${drStrangeImg3}`,
+      image1: "/images/DrStrange2.jpg",
+      image2: "/images/DrStrange4.jpg",
+      image3: "/images/DrStrange3.jpg",
       quote: "The bill comes due. Always.",
       basicInfo: {
         realName: "Stephen Strange",
@@ -186,9 +186,9 @@ export default function HeroSelection() {
       id: "scarletwitch",
       name: "Scarlet Witch",
       alias: "Wanda Maximoff",
-      image1: `${wandImg}`,
-      image2: `${wandImg2}`,
-      image3: `${wandImg3}`,
+      image1: "/images/Wanda3.jpg",
+      image2: "/images/Wanda4.jpg",
+      image3: "/images/Wanda2.jpg",
       quote: "You took everything from me.",
       basicInfo: {
         realName: "Wanda Maximoff",
@@ -220,19 +220,21 @@ export default function HeroSelection() {
 
   const handleHeroSelect = async (hero) => {
     // console.log('Selecting hero:', hero.name);
-    
+
     try {
       // First select the avenger in context
       await selectAvenger(hero);
-      
+
       // If user is authenticated, update their selected heroes in Firebase
       if (currentUser && currentUser.uid) {
         // console.log('Updating user selected heroes for:', currentUser.uid);
         await updateUserSelectedHeroes(currentUser.uid, hero);
       } else {
-        console.warn('Cannot update user selected heroes: No authenticated user');
+        console.warn(
+          "Cannot update user selected heroes: No authenticated user"
+        );
       }
-      
+
       // Navigate to home page
       // console.log('Navigating to home page');
       navigate("/");
@@ -251,24 +253,22 @@ export default function HeroSelection() {
   //     config: { tension: 300, friction: 20 },
   //   });
 
-const [springs, api] = useSprings(avengers.length, index => ({
-  scale: 1,
-  boxShadow: '0 0 0 0 rgba(0, 0, 0, 0)',
-}));
+  const [springs, api] = useSprings(avengers.length, (index) => ({
+    scale: 1,
+    boxShadow: "0 0 0 0 rgba(0, 0, 0, 0)",
+  }));
 
-
-useEffect(() => {
-  api.start(index => {
-    const isHovered = avengers[index]?.id === hoveredHero;
-    return {
-      scale: isHovered ? 1.05 : 1,
-      boxShadow: isHovered
-        ? '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)'
-        : '0 0 0 0 rgba(0, 0, 0, 0)',
-    };
-  });
-}, [hoveredHero, api, avengers]);
-
+  useEffect(() => {
+    api.start((index) => {
+      const isHovered = avengers[index]?.id === hoveredHero;
+      return {
+        scale: isHovered ? 1.05 : 1,
+        boxShadow: isHovered
+          ? "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)"
+          : "0 0 0 0 rgba(0, 0, 0, 0)",
+      };
+    });
+  }, [hoveredHero, api, avengers]);
 
   if (loading) {
     return (

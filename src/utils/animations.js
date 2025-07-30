@@ -115,39 +115,83 @@ export const useFloat = (duration = 2000, y = 10) => {
  * @param {number} speed - Speed of typing (characters per second)
  * @returns {Object} - { typedText, isComplete }
  */
-export const useTypingEffect = (text, delay = 0, speed = 50) => {
+// export const useTypingEffect = (text, delay = 0, speed = 50) => {
+//   const [typedText, setTypedText] = useState('');
+//   const [isComplete, setIsComplete] = useState(false);
+//   const index = useRef(0);
+
+//   useEffect(() => {
+//     let timeout;
+
+//     // Reset when text changes
+//     index.current = 0;
+//     setTypedText('');
+//     setIsComplete(false);
+
+//     const startTyping = () => {
+//       if (index.current < text.length) {
+//         const timeout = setTimeout(() => {
+//           setTypedText(prev => prev + text.charAt(index.current));
+//           index.current += 1;
+//           startTyping();
+//         }, 1000 / speed);
+//         return timeout;
+//       } else {
+//         setIsComplete(true);
+//         return null;
+//       }
+//     };
+
+//     timeout = setTimeout(startTyping, delay);
+
+//     return () => {
+//       if (timeout) clearTimeout(timeout);
+//     };
+//   }, [text, delay, speed]);
+
+//   return { typedText, isComplete };
+// };
+
+export const useTypingEffect = (text, startDelay = 0, typingSpeed = 50) => {
   const [typedText, setTypedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
-  const index = useRef(0);
 
   useEffect(() => {
-    let timeout;
+    if (!text) {
+      setTypedText('');
+      setIsComplete(false);
+      return;
+    }
 
-    // Reset when text changes
-    index.current = 0;
-    setTypedText('');
+    setTypedText(''); // Reset for new text
     setIsComplete(false);
 
-    const startTyping = () => {
-      if (index.current < text.length) {
-        const timeout = setTimeout(() => {
-          setTypedText(prev => prev + text.charAt(index.current));
-          index.current += 1;
-          startTyping();
-        }, 1000 / speed);
-        return timeout;
+    let currentCharacterIndex = 0;
+    let timeoutId;
+
+    const typeNextCharacter = () => {
+      if (currentCharacterIndex < text.length) {
+        // *** CRITICAL CHANGE HERE ***
+        // Instead of appending charAt, update with substring
+        // This ensures all preceding characters, including spaces, are correctly represented.
+        setTypedText(text.substring(0, currentCharacterIndex + 1));
+        
+        currentCharacterIndex++;
+        timeoutId = setTimeout(typeNextCharacter, typingSpeed);
       } else {
         setIsComplete(true);
-        return null;
       }
     };
 
-    timeout = setTimeout(startTyping, delay);
+    // Apply the initial delay before starting the typing process
+    const initialDelayTimeout = setTimeout(typeNextCharacter, startDelay); // Directly call typeNextCharacter after delay
 
     return () => {
-      if (timeout) clearTimeout(timeout);
+      clearTimeout(timeoutId);
+      clearTimeout(initialDelayTimeout); // Clean up the initial delay timeout too
     };
-  }, [text, delay, speed]);
+  }, [text, startDelay, typingSpeed]);
 
   return { typedText, isComplete };
 };
+
